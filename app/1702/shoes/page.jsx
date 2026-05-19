@@ -4,7 +4,7 @@ export const metadata = {
   title: '1702 Shoes | Martins Johnson',
 }
 
-const ITEMS = [{'name': 'The Regent High-Top', 'sub': 'Hand-stitched canvas + leather', 'price': 695, 'tag': 'New'}, {'name': 'The Chelsea Slip', 'sub': 'Elastic gore · full grain', 'price': 745, 'tag': None}, {'name': 'The Runway Derby', 'sub': 'Elongated last · contrast welt', 'price': 825, 'tag': 'Limited'}]
+const ITEMS = [{'name': 'The Regent High-Top', 'sub': 'Hand-stitched canvas + leather', 'price': 695, 'tag': 'New'}, {'name': 'The Chelsea Slip', 'sub': 'Elastic gore · full grain', 'price': 745, 'tag': null}, {'name': 'The Runway Derby', 'sub': 'Elongated last · contrast welt', 'price': 825, 'tag': 'Limited'}]
 
 export default function Page() {
   const bg = false ? '#181A1C' : '#EBEBEA'

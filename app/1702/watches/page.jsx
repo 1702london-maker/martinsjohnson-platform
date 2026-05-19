@@ -4,7 +4,7 @@ export const metadata = {
   title: '1702 Watches | Martins Johnson',
 }
 
-const ITEMS = [{'name': 'The Parliament', 'sub': 'Swiss Automatic · 40mm', 'price': 4500, 'tag': 'Signature'}, {'name': 'The Mayfair Chrono', 'sub': 'Swiss Chronograph · 42mm', 'price': 6200, 'tag': 'Limited'}, {'name': 'The Belgravia Slim', 'sub': 'Swiss Quartz · 38mm', 'price': 3800, 'tag': None}, {'name': 'The Westminster GMT', 'sub': 'Swiss GMT · 41mm', 'price': 5900, 'tag': 'New'}]
+const ITEMS = [{'name': 'The Parliament', 'sub': 'Swiss Automatic · 40mm', 'price': 4500, 'tag': 'Signature'}, {'name': 'The Mayfair Chrono', 'sub': 'Swiss Chronograph · 42mm', 'price': 6200, 'tag': 'Limited'}, {'name': 'The Belgravia Slim', 'sub': 'Swiss Quartz · 38mm', 'price': 3800, 'tag': null}, {'name': 'The Westminster GMT', 'sub': 'Swiss GMT · 41mm', 'price': 5900, 'tag': 'New'}]
 
 export default function Page() {
   const bg = true ? '#181A1C' : '#EBEBEA'

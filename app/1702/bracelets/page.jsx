@@ -4,7 +4,7 @@ export const metadata = {
   title: '1702 Bracelets | Martins Johnson',
 }
 
-const ITEMS = [{'name': 'Leather Wrap — Black', 'sub': 'Italian leather · brass clasp', 'price': 185, 'tag': None}, {'name': 'Silver Cuff', 'sub': '925 sterling silver', 'price': 395, 'tag': 'New'}, {'name': 'Braided Cognac', 'sub': 'Three-strand braid · gold tone', 'price': 155, 'tag': None}]
+const ITEMS = [{'name': 'Leather Wrap — Black', 'sub': 'Italian leather · brass clasp', 'price': 185, 'tag': null}, {'name': 'Silver Cuff', 'sub': '925 sterling silver', 'price': 395, 'tag': 'New'}, {'name': 'Braided Cognac', 'sub': 'Three-strand braid · gold tone', 'price': 155, 'tag': null}]
 
 export default function Page() {
   const bg = false ? '#181A1C' : '#EBEBEA'

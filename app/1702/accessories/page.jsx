@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Accessories | Martins Johnson',
 }
 
-const ITEMS = [{'name': 'Cashmere Scarf', 'sub': '100% Scottish cashmere', 'price': 245, 'tag': None}, {'name': 'Silk Pocket Square', 'sub': 'Hand-rolled edge', 'price': 95, 'tag': None}, {'name': 'Merino Socks (3-pack)', 'sub': 'Italian mill', 'price': 65, 'tag': 'New'}]
+const ITEMS = [{'name': 'Cashmere Scarf', 'sub': '100% Scottish cashmere', 'price': 245, 'tag': null}, {'name': 'Silk Pocket Square', 'sub': 'Hand-rolled edge', 'price': 95, 'tag': null}, {'name': 'Merino Socks (3-pack)', 'sub': 'Italian mill', 'price': 65, 'tag': 'New'}]
 
 export default function Page() {
   const bg = false ? '#181A1C' : '#EBEBEA'
