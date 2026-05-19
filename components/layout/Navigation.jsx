@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useCartStore } from '@/lib/store'
+import { useCartStore, useWishlistStore } from '@/lib/store'
 import { CurrencySelector, LanguageSelector } from '@/components/ui/Selectors'
 
 const MJ_COLLECTION = [
@@ -149,6 +149,9 @@ export default function Navigation() {
             </div>
             <Link href="/book" className="hidden lg:block px-5 py-2.5 border border-mj-b2 text-[10px] tracking-[0.14em] uppercase text-mj-t3 hover:border-mj-t2 hover:text-mj-t1 transition-all font-normal whitespace-nowrap">
               Book Appointment
+            </Link>
+            <Link href="/wishlist" className="hidden md:flex relative text-mj-t4 hover:text-mj-t1 transition-colors" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </Link>
             <Link href="/login" className="hidden md:flex text-mj-t4 hover:text-mj-t1 transition-colors" aria-label="Account">
               <svg width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.4" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round"/><circle cx="12" cy="7" r="4"/></svg>

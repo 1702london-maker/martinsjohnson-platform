@@ -1,4 +1,5 @@
 'use client'
+import WishlistButton from '@/components/ui/WishlistButton'
 import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'

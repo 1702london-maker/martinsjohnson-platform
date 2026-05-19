@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
+import WishlistButton from '@/components/ui/WishlistButton'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata = {
