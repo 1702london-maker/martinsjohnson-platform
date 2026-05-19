@@ -4,7 +4,7 @@ import { useGlobalStore } from '@/lib/store'
 
 const T = {
   en: { eyebrow: 'London · Est. 2024', h1: 'Crafting Legacy', h2: 'Through Luxury', body: 'Handcrafted bespoke footwear and leather goods for the discerning individual. Every piece, a statement of permanence.', cta1: 'Explore Collection', cta2: 'Book Appointment' },
-  fr: { eyebrow: 'Londres · Fondé 2024', h1: 'Forger un Héritage', h2: 'Par le Luxe', body: 'Chaussures artisanales sur mesure et maroquinerie pour l'individu exigeant. Chaque pièce, une déclaration de permanence.', cta1: 'Explorer la Collection', cta2: 'Prendre Rendez-vous' },
+  fr: { eyebrow: 'Londres · Fondé 2024', h1: 'Forger un Héritage',h h2: 'Par le Luxe', body: 'Chaussures artisanales sur mesure et maroquinerie pour l'individu exigeant. Chaque pièce, une déclaration de permanence.', cta1: 'Explorer la Collection', cta2: 'Prendre Rendez-vous' },
   de: { eyebrow: 'London · Gegr. 2024', h1: 'Ein Erbe Schaffen', h2: 'Durch Luxus', body: 'Handgefertigte Maßschuhe und Lederwaren für anspruchsvolle Persönlichkeiten. Jedes Stück ein Statement der Beständigkeit.', cta1: 'Kollektion Entdecken', cta2: 'Termin Buchen' },
   es: { eyebrow: 'Londres · Fundado 2024', h1: 'Creando Legado', h2: 'A Través del Lujo', body: 'Calzado artesanal a medida y marroquinería para el individuo exigente. Cada pieza, una declaración de permanencia.', cta1: 'Explorar Colección', cta2: 'Reservar Cita' },
   ar: { eyebrow: 'لندن · تأسس 2024', h1: 'صياغة الإرث', h2: 'من خلال الفخامة', body: 'أحذية مصنوعة يدويًا وأدوات جلدية للأفراد المميزين. كل قطعة، تعبير عن الديمومة.', cta1: 'استكشف المجموعة', cta2: 'احجز موعداً' },
