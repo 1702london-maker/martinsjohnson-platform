@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'DM Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --nav-h: 80px;
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── RTL SUPPORT ── */
+[dir="rtl"] .font-display { letter-spacing: 0; }
+[dir="rtl"] nav { direction: rtl; }
+[dir="rtl"] .nav-logo { margin-right: 0; margin-left: auto; }
+[dir="rtl"] .ltr-only { direction: ltr; }
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #F3F1EC;
+  color: #383836;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #F3F1EC; }
+::-webkit-scrollbar-thumb { background: #C2C0BB; border-radius: 2px; }
+
+::selection { background: rgba(26,26,24,0.1); }
+
+.font-display { font-family: var(--font-display); }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+.eyebrow {
+  @apply block text-[10px] tracking-[0.28em] uppercase text-mj-t4 font-medium;
+}
+
+.btn-solid {
+  @apply inline-flex items-center gap-2.5 px-7 py-3.5 bg-mj-t1 text-mj-white text-[10px] tracking-[0.22em] uppercase font-medium transition-colors duration-300 hover:bg-mj-t2;
+}
+.btn-outline {
+  @apply inline-flex items-center gap-2.5 px-6 py-3.5 border border-mj-b2 text-mj-t3 text-[10px] tracking-[0.18em] uppercase font-light transition-all duration-300 hover:border-mj-t2 hover:text-mj-t1;
+}
+.btn-ghost {
+  @apply inline-flex items-center gap-2.5 text-[10px] tracking-[0.18em] uppercase text-mj-t4 font-light transition-all duration-300 hover:text-mj-t1;
+}
+
+/* ── EDITORIAL PRODUCT TILE — compact, sculptural ── */
+.product-tile {
+  @apply flex-shrink-0 cursor-pointer;
+}
+.tile-image {
+  @apply bg-mj-white border border-mj-b1 overflow-hidden relative;
+  @apply transition-all duration-500 ease-lux;
+  aspect-ratio: 3/4;
+}
+.tile-image:hover { @apply border-mj-b2 shadow-sm; }
+
+.section      { @apply py-24 px-6 md:px-12 lg:px-20; }
+.section-sm   { @apply py-16 px-6 md:px-12 lg:px-20; }
+.section-dark { @apply bg-mj-dk1 py-24 px-6 md:px-12 lg:px-20; }
+
+.nav-offset { padding-top: var(--nav-h); }
+
+.reveal {
+  @apply opacity-0 translate-y-6;
+  transition: opacity 0.9s var(--ease-lux), transform 0.9s var(--ease-lux);
+}
+.reveal.visible { @apply opacity-100 translate-y-0; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+.skeleton {
+  background: linear-gradient(90deg, #E8E6E1 25%, #EBEBEA 50%, #E8E6E1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── LUXURY DIVIDER ── */
+.lux-divider {
+  @apply h-px bg-mj-b1;
+}
+
+/* ── EDITORIAL GRID ── */
+.editorial-grid {
+  @apply grid gap-0 border border-mj-b1;
+}
+.editorial-grid > * {
+  @apply border-b border-r border-mj-b1 last:border-b-0;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
