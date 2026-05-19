@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 export default function CartDrawer() {
-  const { items, open, setOpen, removeItem, updateQty, clearCart } = useCartStore()
+  const { items, open, setOpen, removeItem, updateQty } = useCartStore()
   const { formatPrice, language } = useGlobalStore()
   const t = T[language?.code] || T.en
   const [loading, setLoading] = useState(false)
@@ -36,13 +36,13 @@ export default function CartDrawer() {
             image: i.image || null,
             metadata: { colour: i.colour, size: i.size, sole: i.sole, initials: i.initials },
           })),
-          successUrl: `${window.location.origin}/account?order=success`,
+          successUrl: `${window.location.origin}/order-success?session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: `${window.location.origin}/shop`,
         }),
       })
       const { url, error } = await res.json()
       if (error) throw new Error(error)
-      if (url) { clearCart(); window.location.href = url }
+      if (url) window.location.href = url
     } catch (err) {
       console.error(err)
       alert('Something went wrong. Please try again.')

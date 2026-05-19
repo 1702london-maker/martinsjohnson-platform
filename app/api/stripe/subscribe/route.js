@@ -22,7 +22,7 @@ export async function POST(request) {
     customer: customer.id,
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity:1 }],
-    success_url: `${siteUrl}/account?club=success&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${siteUrl}/club-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url:  `${siteUrl}/join-the-club`,
     subscription_data: { metadata: { tier, customerEmail, source:'mj_club' } },
   })

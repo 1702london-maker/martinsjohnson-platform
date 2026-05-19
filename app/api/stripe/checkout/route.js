@@ -26,7 +26,7 @@ export async function POST(request) {
     payment_method_types: ['card'],
     line_items: lineItems,
     customer_email: customerEmail,
-    success_url: successUrl || `${siteUrl}/account?order=success&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: successUrl || `${siteUrl}/order-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url:  cancelUrl  || `${siteUrl}/shop`,
     shipping_address_collection: { allowed_countries: ['GB','US','CA','AU','FR','DE','IT','ES','NL','NG','ZA','GH','KE'] },
     shipping_options: [
