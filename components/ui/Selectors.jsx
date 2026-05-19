@@ -35,16 +35,12 @@ export function CurrencySelector({ dark = false }) {
     return () => document.removeEventListener('mousedown', click)
   }, [])
 
-  const textCls = dark
-    ? 'text-mj-dkt2 hover:text-mj-dkt1'
-    : 'text-mj-t4 hover:text-mj-t1'
+  const textCls = dark ? 'text-mj-dkt2 hover:text-mj-dkt1' : 'text-mj-t4 hover:text-mj-t1'
 
   return (
     <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className={`flex items-center gap-1 text-[10px] tracking-[0.14em] uppercase font-medium transition-colors ${textCls}`}
-      >
+      <button onClick={() => setOpen(o => !o)}
+        className={`flex items-center gap-1 text-[10px] tracking-[0.14em] uppercase font-medium transition-colors ${textCls}`}>
         {currency.symbol} {currency.code}
         <svg width="7" height="5" fill="none" viewBox="0 0 8 5" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
           <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
@@ -74,29 +70,33 @@ export function LanguageSelector({ dark = false }) {
     return () => document.removeEventListener('mousedown', click)
   }, [])
 
-  const textCls = dark
-    ? 'text-mj-dkt2 hover:text-mj-dkt1'
-    : 'text-mj-t4 hover:text-mj-t1'
+  const handleSelect = (lang) => {
+    setLanguage(lang)
+    setOpen(false)
+    // Apply RTL/LTR immediately
+    document.documentElement.dir  = lang.dir
+    document.documentElement.lang = lang.code
+    // Store persists across navigation — UI-level language switch active
+  }
+
+  const textCls = dark ? 'text-mj-dkt2 hover:text-mj-dkt1' : 'text-mj-t4 hover:text-mj-t1'
 
   return (
     <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className={`flex items-center gap-1 text-[10px] tracking-[0.14em] uppercase font-medium transition-colors ${textCls}`}
-      >
-        {language.code.toUpperCase()}
+      <button onClick={() => setOpen(o => !o)}
+        className={`flex items-center gap-1 text-[10px] tracking-[0.14em] uppercase font-medium transition-colors ${textCls}`}>
+        {language.flag || language.code.toUpperCase()}
         <svg width="7" height="5" fill="none" viewBox="0 0 8 5" className={`transition-transform ${open ? 'rotate-180' : ''}`}>
           <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
         </svg>
       </button>
       <Dropdown open={open} align="right">
         {LANGUAGES.map(l => (
-          <button key={l.code} onClick={() => { setLanguage(l); setOpen(false) }}
+          <button key={l.code} onClick={() => handleSelect(l)}
             className={`flex items-center justify-between w-full px-4 py-2.5 text-[11px] font-light border-b border-mj-b1 last:border-0 transition-colors hover:bg-mj-bg2 ${language.code === l.code ? 'text-mj-t1 font-medium' : 'text-mj-t3'}`}
-            dir={l.dir}
-          >
+            dir={l.dir}>
             <span>{l.label}</span>
-            {l.dir === 'rtl' && <span className="text-[8px] text-mj-t5 tracking-wider uppercase">RTL</span>}
+            <span className="text-mj-t5 text-[10px] ml-3" dir="ltr">{l.code.toUpperCase()}</span>
           </button>
         ))}
       </Dropdown>

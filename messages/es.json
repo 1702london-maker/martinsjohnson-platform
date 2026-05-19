@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "shop": "Tienda",
+    "bespoke": "A Medida",
+    "joinTheClub": "Únete al Club",
+    "theVision": "La Visión",
+    "journal": "Revista",
+    "affiliates": "Afiliados",
+    "careers": "Empleos",
+    "bookAppointment": "Reservar Cita",
+    "account": "Cuenta"
+  },
+  "hero": {
+    "eyebrow": "Londres · Fundado 2024",
+    "headline1": "Creando Legado",
+    "headline2": "A Través del Lujo",
+    "body": "Calzado artesanal a medida y marroquinería para el individuo exigente. Cada pieza, una declaración de permanencia.",
+    "cta1": "Explorar Colección",
+    "cta2": "Reservar Cita"
+  },
+  "product": {
+    "colour": "Color",
+    "size": "Talla UK",
+    "sizeGuide": "Guía de tallas",
+    "laceColour": "Color de cordón",
+    "sole": "Suela",
+    "initials": "Iniciales",
+    "initialsNote": "Opcional · máx. 3 · +£75",
+    "addToBag": "Añadir a la Bolsa",
+    "adding": "Añadiendo…",
+    "delivery": "Envío gratis al Reino Unido · Devoluciones en 14 días",
+    "selectSize": "Por favor seleccione una talla"
+  },
+  "cart": {
+    "title": "Tu Bolsa",
+    "empty": "Tu bolsa está vacía",
+    "continueShopping": "Seguir Comprando",
+    "subtotal": "Subtotal",
+    "shippingNote": "Envío e impuestos calculados en el pago",
+    "checkout": "Pagar",
+    "redirecting": "Redirigiendo al pago…"
+  },
+  "shop": {
+    "comingSoon": "Próximamente",
+    "comingSoonDesc": "Esta colección está siendo curada",
+    "bookPrivate": "Reservar una cita privada",
+    "shopNow": "Comprar Ahora",
+    "configure": "Configurar →"
+  },
+  "footer": {
+    "tagline": "Creando legado a través del lujo — una historia, una puntada, una visión.",
+    "copyright": "Martins Johnson Ltd. Todos los derechos reservados. Londres, Reino Unido."
+  }
+}

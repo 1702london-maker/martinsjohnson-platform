@@ -1,0 +1,24 @@
+export default function Loading() {
+  return (
+    <div style={{ paddingTop: '5rem', background: '#F3F1EC', minHeight: '100vh' }}>
+      <div style={{ background: '#EBEBEA', borderBottom: '1px solid #D5D3CE' }} className="py-16 px-6">
+        <div className="max-w-7xl mx-auto space-y-4">
+          <div className="h-2.5 w-20 rounded" style={{ background: '#D5D3CE', animation: 'pulse 1.5s ease-in-out infinite' }} />
+          <div className="h-10 w-64 rounded" style={{ background: '#D5D3CE', animation: 'pulse 1.5s ease-in-out infinite' }} />
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i}>
+              <div className="aspect-square mb-4" style={{ background: '#EBEBEA', animation: 'pulse 1.5s ease-in-out infinite', animationDelay: `${i*0.08}s` }} />
+              <div className="h-2.5 w-16 mb-2" style={{ background: '#D5D3CE', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <div className="h-4 w-36 mb-1" style={{ background: '#D5D3CE', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <div className="h-3 w-14" style={{ background: '#E2E0DB', animation: 'pulse 1.5s ease-in-out infinite' }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

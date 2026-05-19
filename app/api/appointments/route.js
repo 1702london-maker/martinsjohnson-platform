@@ -1,68 +1,61 @@
-// app/api/appointments/route.js
-import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { createClient }  from '@/lib/supabase/server'
 
-export async function POST(request) {
-  const body = await request.json()
-  const { type, date, time, name, email, phone, notes } = body
+export async function POST(req) {
+  try {
+    const body = await req.json()
+    const { name, email, phone, date, type, message } = body
 
-  if (!type || !date || !time || !email || !name) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    if (!name || !email) {
+      return NextResponse.json({ error: 'Name and email are required' }, { status: 400 })
+    }
+
+    // Save to Supabase
+    let saved = false
+    try {
+      const supabase = await createClient()
+      const { error } = await supabase.from('appointments').insert({
+        name, email, phone, preferred_date: date || null,
+        type: type || 'footwear', message: message || null,
+        status: 'pending',
+      })
+      if (!error) saved = true
+    } catch (_) {}
+
+    // Send confirmation email via Resend
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Martins Johnson <appointments@martinsjohnson.com>',
+            to: email,
+            bcc: process.env.APPOINTMENTS_EMAIL || 'studio@martinsjohnson.com',
+            subject: `Appointment Request — ${name}`,
+            html: `
+              <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 20px;color:#1A1A18">
+                <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#8A8A87;margin-bottom:24px">Martins Johnson</p>
+                <h1 style="font-size:28px;font-weight:400;margin-bottom:8px;line-height:1.2">Your appointment request has been received.</h1>
+                <p style="color:#5A5A58;line-height:1.8;margin-bottom:32px">Thank you, ${name}. We will confirm your appointment within 24 hours.</p>
+                <table style="width:100%;border-top:1px solid #E8E6E1;padding-top:24px">
+                  <tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87;width:140px">Type</td><td style="color:#1A1A18">${type}</td></tr>
+                  ${date ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87">Preferred Date</td><td style="color:#1A1A18">${date}</td></tr>` : ''}
+                  ${phone ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87">Phone</td><td style="color:#1A1A18">${phone}</td></tr>` : ''}
+                  ${message ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87;vertical-align:top">Notes</td><td style="color:#5A5A58;line-height:1.7">${message}</td></tr>` : ''}
+                </table>
+                <p style="margin-top:40px;font-size:12px;color:#AEAEAD;line-height:1.7">Martins Johnson · London, United Kingdom<br>studio@martinsjohnson.com</p>
+              </div>`,
+          }),
+        })
+      } catch (_) {}
+    }
+
+    return NextResponse.json({ success: true, saved })
+  } catch (err) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
-
-  const sb = createClient()
-
-  // Check availability (no double-booking)
-  const { data: existing } = await sb
-    .from('appointments')
-    .select('id')
-    .eq('appointment_date', date)
-    .eq('appointment_time', time)
-    .eq('status', 'confirmed')
-    .single()
-
-  if (existing) {
-    return NextResponse.json({ error: 'This time slot is no longer available' }, { status: 409 })
-  }
-
-  const { data, error } = await sb
-    .from('appointments')
-    .insert([{
-      type,
-      appointment_date: date,
-      appointment_time: time,
-      customer_name:    name,
-      customer_email:   email,
-      customer_phone:   phone || null,
-      notes:            notes || null,
-      status:           'confirmed',
-    }])
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  // TODO: Send confirmation email via Nodemailer
-
-  return NextResponse.json({ appointment: data, message: 'Appointment confirmed' })
-}
-
-export async function GET(request) {
-  // For admin — list upcoming appointments
-  const { searchParams } = new URL(request.url)
-  const date = searchParams.get('date')
-
-  const sb = createClient()
-  let query = sb
-    .from('appointments')
-    .select('id, type, appointment_date, appointment_time, customer_name, status')
-    .eq('status', 'confirmed')
-    .order('appointment_date', { ascending: true })
-    .order('appointment_time', { ascending: true })
-
-  if (date) query = query.eq('appointment_date', date)
-
-  const { data, error } = await query
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ appointments: data })
 }

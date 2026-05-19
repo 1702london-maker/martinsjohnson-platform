@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "shop": "Boutique",
+    "bespoke": "Sur Mesure",
+    "joinTheClub": "Rejoindre Le Club",
+    "theVision": "La Vision",
+    "journal": "Journal",
+    "affiliates": "Affiliés",
+    "careers": "Carrières",
+    "bookAppointment": "Prendre Rendez-vous",
+    "account": "Compte"
+  },
+  "hero": {
+    "eyebrow": "Londres · Fondé en 2024",
+    "headline1": "Forger un Héritage",
+    "headline2": "Par le Luxe",
+    "body": "Chaussures artisanales sur mesure et maroquinerie pour l'individu exigeant. Chaque pièce, une déclaration de permanence.",
+    "cta1": "Explorer la Collection",
+    "cta2": "Prendre Rendez-vous"
+  },
+  "product": {
+    "colour": "Couleur",
+    "size": "Pointure UK",
+    "sizeGuide": "Guide des tailles",
+    "laceColour": "Couleur des lacets",
+    "sole": "Semelle",
+    "initials": "Initiales",
+    "initialsNote": "Optionnel · max 3 · +£75",
+    "addToBag": "Ajouter au Panier",
+    "adding": "Ajout en cours…",
+    "delivery": "Livraison UK gratuite · Retours sous 14 jours · Fait à la main sur commande",
+    "selectSize": "Veuillez sélectionner une pointure"
+  },
+  "cart": {
+    "title": "Votre Panier",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer les Achats",
+    "subtotal": "Sous-total",
+    "shippingNote": "Livraison et taxes calculées à la caisse",
+    "checkout": "Commander",
+    "redirecting": "Redirection vers la caisse…"
+  },
+  "shop": {
+    "comingSoon": "Bientôt Disponible",
+    "comingSoonDesc": "Cette collection est en cours de curation",
+    "bookPrivate": "Réserver un rendez-vous privé",
+    "shopNow": "Acheter",
+    "configure": "Configurer →"
+  },
+  "footer": {
+    "tagline": "Forger un héritage par le luxe — une histoire, un point, une vision.",
+    "copyright": "Martins Johnson Ltd. Tous droits réservés. Londres, Royaume-Uni."
+  }
+}

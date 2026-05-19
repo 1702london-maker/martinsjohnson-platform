@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "shop": "Shop",
+    "bespoke": "Maßanfertigung",
+    "joinTheClub": "Club beitreten",
+    "theVision": "Die Vision",
+    "journal": "Journal",
+    "affiliates": "Partner",
+    "careers": "Karriere",
+    "bookAppointment": "Termin buchen",
+    "account": "Konto"
+  },
+  "hero": {
+    "eyebrow": "London · Gegr. 2024",
+    "headline1": "Ein Erbe schaffen",
+    "headline2": "Durch Luxus",
+    "body": "Handgefertigte Maßschuhe und Lederwaren für anspruchsvolle Persönlichkeiten. Jedes Stück ein Statement der Beständigkeit.",
+    "cta1": "Kollektion entdecken",
+    "cta2": "Termin buchen"
+  },
+  "product": {
+    "colour": "Farbe",
+    "size": "UK-Größe",
+    "sizeGuide": "Größentabelle",
+    "laceColour": "Schnürsenkelfarbe",
+    "sole": "Sohle",
+    "initials": "Initialen",
+    "initialsNote": "Optional · max. 3 · +£75",
+    "addToBag": "In den Warenkorb",
+    "adding": "Wird hinzugefügt…",
+    "delivery": "Kostenlose Lieferung (UK) · 14 Tage Rückgabe",
+    "selectSize": "Bitte Größe auswählen"
+  },
+  "cart": {
+    "title": "Ihr Warenkorb",
+    "empty": "Ihr Warenkorb ist leer",
+    "continueShopping": "Weiter einkaufen",
+    "subtotal": "Zwischensumme",
+    "shippingNote": "Versand und Zoll werden an der Kasse berechnet",
+    "checkout": "Zur Kasse",
+    "redirecting": "Weiterleitung zur Kasse…"
+  },
+  "shop": {
+    "comingSoon": "Demnächst",
+    "comingSoonDesc": "Diese Kollektion wird gerade zusammengestellt",
+    "bookPrivate": "Privaten Termin buchen",
+    "shopNow": "Jetzt einkaufen",
+    "configure": "Konfigurieren →"
+  },
+  "footer": {
+    "tagline": "Ein Erbe schaffen durch Luxus — eine Geschichte, ein Stich, eine Vision.",
+    "copyright": "Martins Johnson Ltd. Alle Rechte vorbehalten. London, Vereinigtes Königreich."
+  }
+}

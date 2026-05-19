@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "shop": "Shop",
+    "bespoke": "Bespoke",
+    "joinTheClub": "Join The Club",
+    "theVision": "The Vision",
+    "journal": "Journal",
+    "affiliates": "Affiliates",
+    "careers": "Careers",
+    "bookAppointment": "Book Appointment",
+    "account": "Account"
+  },
+  "hero": {
+    "eyebrow": "London · Est. 2024",
+    "headline1": "Crafting Legacy",
+    "headline2": "Through Luxury",
+    "body": "Handcrafted bespoke footwear and leather goods for the discerning individual. Every piece, a statement of permanence.",
+    "cta1": "Explore Collection",
+    "cta2": "Book Appointment"
+  },
+  "product": {
+    "colour": "Colour",
+    "size": "UK Size",
+    "sizeGuide": "Size guide",
+    "laceColour": "Lace Colour",
+    "sole": "Sole",
+    "initials": "Initials",
+    "initialsNote": "Optional · max 3 · +£75",
+    "addToBag": "Add to Bag",
+    "adding": "Adding…",
+    "delivery": "Free UK delivery · 14-day returns · Handcrafted to order",
+    "selectSize": "Please select a size"
+  },
+  "cart": {
+    "title": "Your Bag",
+    "empty": "Your bag is empty",
+    "continueShopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "shippingNote": "Shipping and duty calculated at checkout",
+    "checkout": "Checkout",
+    "redirecting": "Redirecting to Checkout…"
+  },
+  "shop": {
+    "comingSoon": "Coming Soon",
+    "comingSoonDesc": "This collection is being curated",
+    "bookPrivate": "Book a private appointment",
+    "shopNow": "Shop Now",
+    "configure": "Configure →"
+  },
+  "footer": {
+    "tagline": "Crafting legacy through luxury — one story, one stitch, one vision.",
+    "copyright": "Martins Johnson Ltd. All rights reserved. London, United Kingdom."
+  }
+}
