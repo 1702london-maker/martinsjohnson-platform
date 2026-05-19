@@ -24,16 +24,82 @@ The Blake stitch — a single thread that passes through the insole, welt, and o
 
 The trade-off is skill. Blake stitching requires a craftsperson who knows what they are doing. There is no tolerance for error when a single seam holds everything together. That, in a way, is exactly the point.`
   },
+  'african-craftsmanship': {
+    category: 'Culture', title: 'Why African Craftsmanship Is the Future of Luxury', date: 'June 2025', readTime: '12 min',
+    body: `Luxury has always borrowed from culture. The future belongs to brands that acknowledge that source with clarity, respect, and discipline.
+
+African craftsmanship carries a vocabulary of pattern, material intelligence, storytelling, and ceremony that global luxury is only beginning to understand. The opportunity is not to imitate heritage, but to build with it.
+
+For Martins Johnson, that means treating craft as both memory and strategy. Every leather object can hold a trace of where it came from and a signal of where it is going.`
+  },
+  'knife-on-leather': {
+    category: 'Campaign', title: 'The First Cut: On Knife on Leather and the Power of Creative Precision', date: 'May 2025', readTime: '8 min',
+    body: `The first cut is a commitment. Once the blade touches leather, intention becomes visible.
+
+Knife on Leather began as a creative image and became a philosophy: move with precision, remove what is unnecessary, and respect the material enough to make every decision count.
+
+That is how we think about products, campaigns, partnerships, and community work. Nothing careless. Nothing disposable.`
+  },
+  'bespoke-commission': {
+    category: 'Atelier', title: 'What It Truly Means to Commission a Bespoke Shoe', date: 'Apr 2025', readTime: '6 min',
+    body: `A bespoke commission is not just a purchase. It is a conversation translated into leather.
+
+The process begins with fit and function, then moves into proportion, colour, material, sole, initials, and finish. The final object should feel inevitable, as if it could only have belonged to the person who commissioned it.
+
+That is the quiet power of bespoke: it does not shout. It fits.`
+  },
+  'full-grain-vs-top-grain': {
+    category: 'Materials', title: 'Full-Grain vs Top-Grain Leather', date: 'Mar 2025', readTime: '6 min',
+    body: `Full-grain leather keeps the strongest and most expressive part of the hide. It carries natural markings, depth, and the ability to develop a patina.
+
+Top-grain leather is corrected for uniformity. It can be beautiful, but it is often less alive over time.
+
+The choice depends on the object, but our bias is simple: when permanence matters, keep the grain honest.`
+  },
+  'bespoke-process-explained': {
+    category: 'Bespoke', title: 'The Bespoke Process, Explained', date: 'Feb 2025', readTime: '10 min',
+    body: `The process starts with consultation: use, fit, taste, and the small frustrations a current wardrobe does not solve.
+
+From there we define the object, confirm measurements, review materials, price the commission, and begin production. The client receives updates as the piece moves from pattern to cutting, stitching, finishing, and delivery.
+
+Good process removes uncertainty. Great process makes anticipation part of the experience.`
+  },
+  'london-shoemaking-history': {
+    category: 'Heritage', title: "London's Shoemaking Heritage", date: 'Jan 2025', readTime: '12 min',
+    body: `London shoemaking has always been about restraint, proportion, and confidence.
+
+The tradition is not frozen in the past. It is a technical inheritance: lasts, finishing, repairability, and the discipline to make shoes that look better when they have lived.
+
+Martins Johnson builds from that lineage while widening the cultural lens around who gets to define luxury now.`
+  },
+  'caring-for-leather': {
+    category: 'Care', title: 'How to Care for Leather', date: 'Dec 2024', readTime: '7 min',
+    body: `Leather rewards rhythm. Brush away dust, let pieces rest, condition sparingly, and never rush drying with direct heat.
+
+Shoes need trees. Bags need shape support. Belts need room to breathe. The rules are simple because the material is honest.
+
+Care is not maintenance alone. It is participation in the life of the object.`
+  },
+  'the-1702-story': {
+    category: 'Brand', title: 'The Story Behind 1702', date: 'Nov 2024', readTime: '4 min',
+    body: `1702 is the ready-to-wear expression of the Martins Johnson world.
+
+Where bespoke is intimate and singular, 1702 is sharper, faster, and built for cultural movement. It carries the same respect for materials, but speaks in drops, capsules, and everyday statements.
+
+It is the bridge between atelier craft and the street-level energy that keeps a brand alive.`
+  },
 }
 
 export async function generateMetadata({ params }) {
-  const article = ARTICLES[params.slug]
+  const { slug } = await params
+  const article = ARTICLES[slug]
   if (!article) return {}
   return { title: `${article.title} | MJ Journal`, description: article.body.slice(0, 160) }
 }
 
-export default function ArticlePage({ params }) {
-  const article = ARTICLES[params.slug]
+export default async function ArticlePage({ params }) {
+  const { slug } = await params
+  const article = ARTICLES[slug]
   if (!article) notFound()
 
   return (

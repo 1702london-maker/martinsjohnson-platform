@@ -114,7 +114,7 @@ export function WatchesSection({ products = [] }) {
           <span className="eyebrow mb-3">Timepieces & Bracelets</span>
           <h2 className="font-display text-display-sm font-normal text-mj-t1">Wrist <em className="italic text-mj-t4">Essentials</em></h2>
         </div>
-        <Link2 href="/watches" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light hidden md:flex">
+        <Link2 href="/1702/watches" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light hidden md:flex">
           <span className="w-5 h-px bg-mj-b2" />View all
         </Link2>
       </div>

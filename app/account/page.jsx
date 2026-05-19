@@ -268,8 +268,8 @@ export default function AccountPage() {
       if (!data.user) { router.push('/login'); return }
       setUser(data.user)
       const [ordersRes, subRes] = await Promise.all([
-        sb.from('orders').select('*').eq('user_id',data.user.id).order('created_at',{ascending:false}).limit(20),
-        sb.from('club_subscriptions').select('*').eq('user_id',data.user.id).eq('status','active').single()
+        sb.from('orders').select('*').or(`user_id.eq.${data.user.id},customer_email.eq.${data.user.email}`).order('created_at',{ascending:false}).limit(20),
+        sb.from('club_subscriptions').select('*').or(`user_id.eq.${data.user.id},customer_email.eq.${data.user.email}`).eq('status','active').maybeSingle()
       ])
       setOrders(ordersRes.data||[])
       setSub(subRes.data||null)

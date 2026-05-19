@@ -7,9 +7,9 @@ import { CurrencySelector, LanguageSelector } from '@/components/ui/Selectors'
 
 const MJ_COLLECTION = [
   { label:'Bespoke Shoes',      href:'/bespoke/shoes' },
-  { label:'Bags',               href:'/bags' },
-  { label:'Leather Goods',      href:'/leather-goods' },
-  { label:'Bracelets',          href:'/leather-goods/bracelets' },
+  { label:'Bags',               href:'/shop/bags' },
+  { label:'Leather Goods',      href:'/shop/leather-goods' },
+  { label:'Bracelets',          href:'/shop/bracelets' },
   { label:'Atelier Exclusives', href:'/shop?filter=exclusive' },
 ]
 
@@ -184,7 +184,7 @@ export default function Navigation() {
                 <LanguageSelector /><CurrencySelector />
               </div>
               <div className="flex-1 flex flex-col px-8 py-6 gap-1">
-                {[['Shop All','/shop'],['1702 Collection','/1702'],['Bespoke Shoes','/bespoke/shoes'],['Bags & Leather','/bags'],['Join The Club','/join-the-club'],['The Vision','/the-vision'],['Knife on Leather','/knife-on-leather'],['The Leatherpreneur','/leatherpreneur'],['Journal','/journal'],['Affiliates','/affiliates'],['Careers','/careers'],['Build Your Brand','/build-your-brand'],['Book Appointment','/book']].map(([label,href])=>(
+                {[['Shop All','/shop'],['1702 Collection','/1702'],['Bespoke Shoes','/bespoke/shoes'],['Bags & Leather','/shop/bags'],['Join The Club','/join-the-club'],['The Vision','/the-vision'],['Knife on Leather','/knife-on-leather'],['The Leatherpreneur','/leatherpreneur'],['Journal','/journal'],['Affiliates','/affiliates'],['Careers','/careers'],['Build Your Brand','/build-your-brand'],['Book Appointment','/book']].map(([label,href])=>(
                   <Link key={href} href={href} onClick={()=>setMobileOpen(false)}
                     className="font-display text-[26px] font-light text-mj-t3 hover:text-mj-t1 transition-colors py-1.5">{label}</Link>
                 ))}

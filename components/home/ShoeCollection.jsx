@@ -51,7 +51,7 @@ export default function ShoeCollection({ products = [] }) {
               <button onClick={() => scroll(-1)} className="w-9 h-9 border border-mj-b2 text-mj-t4 flex items-center justify-center hover:border-mj-t2 hover:text-mj-t1 transition-all text-sm">←</button>
               <button onClick={() => scroll(1)}  className="w-9 h-9 border border-mj-b2 text-mj-t4 flex items-center justify-center hover:border-mj-t2 hover:text-mj-t1 transition-all text-sm">→</button>
             </div>
-            <Link href="/shoes" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light">
+            <Link href="/shop/men" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light">
               <span className="w-5 h-px bg-mj-b2" />View all
             </Link>
           </div>

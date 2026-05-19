@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createClient }  from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const config = { api: { bodyParser: false } }
 
 export async function POST(req) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient()
 
     // Verify auth
     const { data: { user } } = await supabase.auth.getUser()
@@ -21,8 +22,9 @@ export async function POST(req) {
     const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
     const buffer   = Buffer.from(await file.arrayBuffer())
 
-    const { data, error } = await supabase.storage
-      .from('mj-assets')
+    const admin = createAdminClient()
+    const { data, error } = await admin.storage
+      .from('product-images')
       .upload(filename, buffer, {
         contentType: file.type,
         upsert: false,
@@ -30,8 +32,8 @@ export async function POST(req) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('mj-assets')
+    const { data: { publicUrl } } = admin.storage
+      .from('product-images')
       .getPublicUrl(data.path)
 
     return NextResponse.json({ url: publicUrl, path: data.path })

@@ -37,7 +37,7 @@ export default function BagsSection({ products = [] }) {
               Bags & <em className="italic text-mj-t4">Accessories</em>
             </h2>
           </div>
-          <Link href="/bags" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light hidden md:flex">
+          <Link href="/shop/bags" className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-light hidden md:flex">
             <span className="w-5 h-px bg-mj-b2" />View all
           </Link>
         </div>

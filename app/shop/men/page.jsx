@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import WishlistButton from '@/components/ui/WishlistButton'
 import { createClient } from '@/lib/supabase/server'
+import { normaliseProductCard, productMatchesFilter } from '@/lib/products'
 
 export const metadata = {
     title: "Men's Collection | Martins Johnson",
@@ -15,11 +16,11 @@ async function getProducts(category) {
     const supabase = await createClient()
     const { data } = await supabase
       .from('products')
-      .select('id, name, slug, price, category, images, tag')
-      .eq('gender_tag', 'men')
-      .eq('active', true)
+      .select('id, name, slug, price, category, gender, image_urls, is_new_arrival, metadata, tags')
+      .eq('gender', 'men')
+      .eq('available', true)
       .order('created_at', { ascending: false })
-    return data || []
+    return (data || []).map(normaliseProductCard)
   } catch {
     return []
   }
@@ -27,8 +28,9 @@ async function getProducts(category) {
 
 export default async function Page({ searchParams }) {
   const products = await getProducts('men')
-  const filter = searchParams?.filter || 'All'
-  const filtered = filter === 'All' ? products : products.filter(p => p.category?.toLowerCase() === filter.toLowerCase())
+  const params = await searchParams
+  const filter = params?.filter || 'All'
+  const filtered = products.filter(product => productMatchesFilter(product, filter))
 
   return (
     <div style={{ paddingTop: '5rem', background: '#F3F1EC', minHeight: '100vh' }}>

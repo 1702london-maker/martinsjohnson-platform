@@ -185,6 +185,8 @@ create policy "Products public read"
 -- Orders: users see own orders
 create policy "Users see own orders"
   on orders for select using (auth.uid() = user_id);
+create policy "Users see orders by email"
+  on orders for select using ((auth.jwt() ->> 'email') = customer_email);
 
 -- Bespoke: anyone can submit, users see own
 create policy "Anyone can submit bespoke"
@@ -209,6 +211,8 @@ create policy "Anyone can subscribe newsletter"
 -- Club: users see own subscription
 create policy "Users see own subscription"
   on club_subscriptions for select using (auth.uid() = user_id);
+create policy "Users see subscription by email"
+  on club_subscriptions for select using ((auth.jwt() ->> 'email') = customer_email);
 
 -- Journal: public read for published
 create policy "Journal public read"

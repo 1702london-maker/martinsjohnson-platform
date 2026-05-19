@@ -1,16 +1,28 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function AdminProductsPage() {
-  const [form, setForm] = useState({ name: '', slug: '', price: '', category: '', gender_tag: 'men', description: '', tag: '' })
+  const router = useRouter()
+  const [form, setForm] = useState({ name: '', slug: '', price: '', category: '', gender: 'unisex', description: '', badge: '', tags: '' })
   const [images, setImages] = useState([])
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const fileRef = useRef()
 
-  const CATEGORIES = ['oxford','derby','brogue','boot','loafer','monk','sneaker','slipper','heel','flat','pump','mule','briefcase','holdall','tote','clutch','wallet','card-holder','belt','bracelet']
+  const CATEGORIES = ['oxford','derby','boot','loafer','monkstrap','sneaker','slipper','highheel','bag','belt','bracelet','watch','accessories','exotic','bespoke']
+
+  useEffect(() => {
+    async function checkUser() {
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data } = await supabase.auth.getUser()
+      if (!data.user) router.push('/login?redirect=/admin/products')
+    }
+    checkUser()
+  }, [router])
 
   const handleFiles = async (files) => {
     setUploading(true)
@@ -32,9 +44,15 @@ export default function AdminProductsPage() {
     const res = await fetch('/api/products', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, price: Number(form.price), images, active: true }),
+      body: JSON.stringify({
+        ...form,
+        price: Number(form.price),
+        image_urls: images,
+        available: true,
+        tags: form.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+      }),
     })
-    if (res.ok) { setSaved(true); setForm({ name:'', slug:'', price:'', category:'', gender_tag:'men', description:'', tag:'' }); setImages([]) }
+    if (res.ok) { setSaved(true); setForm({ name:'', slug:'', price:'', category:'', gender:'unisex', description:'', badge:'', tags:'' }); setImages([]) }
     setSaving(false)
   }
 
@@ -92,7 +110,8 @@ export default function AdminProductsPage() {
             { key: 'name', label: 'Product Name', type: 'text', required: true },
             { key: 'slug', label: 'Slug (auto-generated)', type: 'text' },
             { key: 'price', label: 'Price (£)', type: 'number', required: true },
-            { key: 'tag', label: 'Badge (e.g. New, Limited)', type: 'text' },
+            { key: 'badge', label: 'Badge (e.g. New, Limited)', type: 'text' },
+            { key: 'tags', label: 'Tags (comma-separated)', type: 'text' },
           ].map(field => (
             <div key={field.key}>
               <label className="eyebrow block mb-2">{field.label}{field.required && ' *'}</label>
@@ -114,10 +133,10 @@ export default function AdminProductsPage() {
               </select>
             </div>
             <div>
-              <label className="eyebrow block mb-2">Gender Tag</label>
-              <select value={form.gender_tag} onChange={e => setForm({ ...form, gender_tag: e.target.value })}
+              <label className="eyebrow block mb-2">Gender</label>
+              <select value={form.gender} onChange={e => setForm({ ...form, gender: e.target.value })}
                 className="w-full px-4 py-3 border border-mj-bg2 bg-mj-bg focus:outline-none focus:border-mj-t1 appearance-none">
-                {['men','women','bags','belts','leather-goods','bracelets'].map(g => <option key={g} value={g}>{g}</option>)}
+                {['men','women','unisex'].map(g => <option key={g} value={g}>{g}</option>)}
               </select>
             </div>
           </div>

@@ -4,6 +4,7 @@
 // Paste this file content into:  app/api/products/route.js
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { NextResponse } from 'next/server'
 
 export async function GET(request) {
@@ -36,23 +37,30 @@ export async function GET(request) {
 
 export async function POST(req) {
   try {
-    const supabase = await createClient()
+    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 
     const body = await req.json()
     const slug = body.slug || body.name.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const badge = body.badge || body.tag || null
+    const tags = Array.isArray(body.tags) ? body.tags : []
+    const imageUrls = body.image_urls || body.images || []
+    const admin = createAdminClient()
 
-    const { data, error } = await supabase.from('products').insert({
+    const { data, error } = await admin.from('products').insert({
       name:        body.name,
       slug,
       price:       Number(body.price),
       category:    body.category,
-      gender_tag:  body.gender_tag || 'men',
+      gender:      body.gender || 'unisex',
       description: body.description || null,
-      images:      body.images || [],
-      tag:         body.tag || null,
-      active:      body.active ?? true,
+      image_urls:  imageUrls,
+      tags,
+      is_new_arrival: badge?.toLowerCase() === 'new',
+      is_featured:    ['signature', 'bestseller', 'featured'].includes(String(badge || '').toLowerCase()),
+      available:   body.available ?? true,
+      metadata:    { badge },
     }).select().single()
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })

@@ -4,20 +4,25 @@ import { createClient }  from '@/lib/supabase/server'
 export async function POST(req) {
   try {
     const body = await req.json()
-    const { name, email, phone, date, type, message } = body
+    const { name, email, phone, date, time, type, message, notes } = body
 
-    if (!name || !email) {
-      return NextResponse.json({ error: 'Name and email are required' }, { status: 400 })
+    if (!name || !email || !date || !time) {
+      return NextResponse.json({ error: 'Name, email, date, and time are required' }, { status: 400 })
     }
 
     // Save to Supabase
     let saved = false
     try {
-      const supabase = await createClient()
+      const supabase = createClient()
       const { error } = await supabase.from('appointments').insert({
-        name, email, phone, preferred_date: date || null,
-        type: type || 'footwear', message: message || null,
-        status: 'pending',
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone || null,
+        appointment_date: date,
+        appointment_time: time,
+        type: type || 'general',
+        notes: notes || message || null,
+        status: 'confirmed',
       })
       if (!error) saved = true
     } catch (_) {}
@@ -45,7 +50,8 @@ export async function POST(req) {
                   <tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87;width:140px">Type</td><td style="color:#1A1A18">${type}</td></tr>
                   ${date ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87">Preferred Date</td><td style="color:#1A1A18">${date}</td></tr>` : ''}
                   ${phone ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87">Phone</td><td style="color:#1A1A18">${phone}</td></tr>` : ''}
-                  ${message ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87;vertical-align:top">Notes</td><td style="color:#5A5A58;line-height:1.7">${message}</td></tr>` : ''}
+                  ${time ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87">Time</td><td style="color:#1A1A18">${time} GMT</td></tr>` : ''}
+                  ${notes || message ? `<tr><td style="padding:8px 0;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A8A87;vertical-align:top">Notes</td><td style="color:#5A5A58;line-height:1.7">${notes || message}</td></tr>` : ''}
                 </table>
                 <p style="margin-top:40px;font-size:12px;color:#AEAEAD;line-height:1.7">Martins Johnson · London, United Kingdom<br>studio@martinsjohnson.com</p>
               </div>`,

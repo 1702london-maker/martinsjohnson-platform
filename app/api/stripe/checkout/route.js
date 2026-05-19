@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
   const { items, customerEmail, successUrl, cancelUrl } = await request.json()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_URL || request.nextUrl.origin
 
   const lineItems = items.map(item => ({
     price_data: {
@@ -25,8 +26,8 @@ export async function POST(request) {
     payment_method_types: ['card'],
     line_items: lineItems,
     customer_email: customerEmail,
-    success_url: successUrl || `${process.env.NEXT_PUBLIC_URL}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:  cancelUrl  || `${process.env.NEXT_PUBLIC_URL}/shop`,
+    success_url: successUrl || `${siteUrl}/account?order=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url:  cancelUrl  || `${siteUrl}/shop`,
     shipping_address_collection: { allowed_countries: ['GB','US','CA','AU','FR','DE','IT','ES','NL','NG','ZA','GH','KE'] },
     shipping_options: [
       {

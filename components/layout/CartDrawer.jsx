@@ -89,7 +89,9 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <div className="space-y-6 py-4">
-                  {items.map(item => (
+                  {items.map(item => {
+                    const initials = Array.isArray(item.initials) ? item.initials.filter(Boolean).join('') : item.initials
+                    return (
                     <div key={item.id} className="flex gap-4 pb-6 border-b border-mj-bg2">
                       <div className="w-20 h-20 flex-shrink-0 bg-mj-bg2 flex items-center justify-center">
                         {item.image ? (
@@ -104,7 +106,7 @@ export default function CartDrawer() {
                           {item.colour && <span>{item.colour}</span>}
                           {item.size && <span> · UK {item.size}</span>}
                           {item.sole && <span> · {item.sole}</span>}
-                          {item.initials?.filter(Boolean).length > 0 && <span> · {item.initials.filter(Boolean).join('')}</span>}
+                          {initials && <span> · {initials}</span>}
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3 border border-mj-bg2 px-3 py-1">
@@ -117,7 +119,7 @@ export default function CartDrawer() {
                       </div>
                       <button onClick={() => removeItem(item.id)} className="text-mj-t4 hover:text-mj-t1 text-lg self-start leading-none mt-0.5">×</button>
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>

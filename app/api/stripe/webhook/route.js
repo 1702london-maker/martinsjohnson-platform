@@ -1,20 +1,21 @@
 import Stripe from 'stripe'
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 async function sendOrderEmail(session) {
   if (!process.env.RESEND_API_KEY) return
+
   const customer = session.customer_details
   const items = session.line_items?.data || []
-  const total = (session.amount_total / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })
+  const total = ((session.amount_total || 0) / 100).toLocaleString('en-GB', { style: 'currency', currency: 'GBP' })
 
   const itemsHtml = items.map(i =>
     `<tr>
       <td style="padding:10px 0;border-bottom:1px solid #E8E6E1;color:#1A1A18">${i.description}</td>
       <td style="padding:10px 0;border-bottom:1px solid #E8E6E1;color:#8A8A87;text-align:center">${i.quantity}</td>
-      <td style="padding:10px 0;border-bottom:1px solid #E8E6E1;color:#1A1A18;text-align:right">£${(i.amount_total/100).toLocaleString()}</td>
+      <td style="padding:10px 0;border-bottom:1px solid #E8E6E1;color:#1A1A18;text-align:right">£${((i.amount_total || 0) / 100).toLocaleString()}</td>
     </tr>`
   ).join('')
 
@@ -28,7 +29,7 @@ async function sendOrderEmail(session) {
       from: 'Martins Johnson <orders@martinsjohnson.com>',
       to: customer?.email,
       bcc: process.env.ORDERS_EMAIL || 'orders@martinsjohnson.com',
-      subject: `Order Confirmed — ${session.metadata?.orderNumber || session.id.slice(-8).toUpperCase()}`,
+      subject: `Order Confirmed - ${session.id.slice(-8).toUpperCase()}`,
       html: `
         <div style="font-family:Georgia,serif;max-width:560px;margin:0 auto;padding:40px 20px;color:#1A1A18">
           <p style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#8A8A87;margin-bottom:24px">Martins Johnson</p>
@@ -52,9 +53,61 @@ async function sendOrderEmail(session) {
   }).catch(() => {})
 }
 
+async function saveOrder(session) {
+  const admin = createAdminClient()
+  const lineItems = session.line_items?.data || []
+  const items = lineItems.map(item => ({
+    name: item.description,
+    quantity: item.quantity || 1,
+    unit_amount: item.price?.unit_amount ? item.price.unit_amount / 100 : null,
+    total: (item.amount_total || 0) / 100,
+  }))
+
+  await admin.from('orders').upsert({
+    stripe_session_id: session.id,
+    customer_email: session.customer_details?.email || session.customer_email,
+    customer_name: session.customer_details?.name || null,
+    status: 'confirmed',
+    items,
+    subtotal: (session.amount_subtotal || session.amount_total || 0) / 100,
+    shipping: (session.total_details?.amount_shipping || 0) / 100,
+    total: (session.amount_total || 0) / 100,
+    currency: String(session.currency || 'gbp').toUpperCase(),
+    shipping_address: session.customer_details?.address || null,
+  }, { onConflict: 'stripe_session_id' })
+}
+
+async function saveSubscription(subscription) {
+  const admin = createAdminClient()
+  let customerEmail = subscription.metadata?.customerEmail || null
+
+  if (!customerEmail && subscription.customer) {
+    try {
+      const customer = await stripe.customers.retrieve(subscription.customer)
+      customerEmail = customer?.email || null
+    } catch {}
+  }
+
+  if (!customerEmail) return
+
+  await admin.from('club_subscriptions').upsert({
+    customer_email: customerEmail,
+    tier: subscription.metadata?.tier || 'founder',
+    stripe_subscription_id: subscription.id,
+    stripe_customer_id: subscription.customer,
+    status: subscription.status === 'canceled' ? 'cancelled' : subscription.status,
+    current_period_end: subscription.current_period_end
+      ? new Date(subscription.current_period_end * 1000).toISOString()
+      : null,
+    cancelled_at: subscription.canceled_at
+      ? new Date(subscription.canceled_at * 1000).toISOString()
+      : null,
+  }, { onConflict: 'stripe_subscription_id' })
+}
+
 export async function POST(req) {
   const body = await req.text()
-  const sig  = req.headers.get('stripe-signature')
+  const sig = req.headers.get('stripe-signature')
 
   let event
   try {
@@ -64,44 +117,18 @@ export async function POST(req) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object
-
-    // Expand line items
-    const expanded = await stripe.checkout.sessions.retrieve(session.id, {
+    const session = await stripe.checkout.sessions.retrieve(event.data.object.id, {
       expand: ['line_items'],
     })
 
-    // Save order to Supabase
-    try {
-      const supabase = await createClient()
-      await supabase.from('orders').insert({
-        stripe_session_id: session.id,
-        customer_email:    session.customer_details?.email,
-        customer_name:     session.customer_details?.name,
-        amount_total:      session.amount_total,
-        currency:          session.currency,
-        status:            'confirmed',
-        metadata:          session.metadata,
-      })
-    } catch (_) {}
-
-    // Send confirmation email
-    await sendOrderEmail(expanded)
+    if (session.mode === 'payment') {
+      await saveOrder(session)
+      await sendOrderEmail(session)
+    }
   }
 
-  if (event.type === 'customer.subscription.created') {
-    // Club membership activated
-    const sub = event.data.object
-    try {
-      const supabase = await createClient()
-      await supabase.from('subscriptions').upsert({
-        stripe_subscription_id: sub.id,
-        stripe_customer_id:     sub.customer,
-        status:                 sub.status,
-        plan:                   sub.metadata?.plan || 'monthly',
-        current_period_end:     new Date(sub.current_period_end * 1000).toISOString(),
-      }, { onConflict: 'stripe_subscription_id' })
-    } catch (_) {}
+  if (['customer.subscription.created', 'customer.subscription.updated', 'customer.subscription.deleted'].includes(event.type)) {
+    await saveSubscription(event.data.object)
   }
 
   return NextResponse.json({ received: true })

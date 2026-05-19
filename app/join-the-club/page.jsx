@@ -73,6 +73,7 @@ export default function JoinTheClubPage() {
 
   async function subscribe(tier) {
     if (!email || !email.includes('@')) { toast.error('Please enter a valid email'); return }
+    if (!tier.priceId) { toast.error('This membership tier is not configured yet.'); return }
     setLoading(tier.id)
     try {
       const res = await fetch('/api/stripe/subscribe', {

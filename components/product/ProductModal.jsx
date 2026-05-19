@@ -48,7 +48,8 @@ export default function ProductModal({ product, onClose }) {
   const [imgIdx,    setImgIdx]    = useState(0)
   const [adding,    setAdding]    = useState(false)
 
-  const isLaced    = product?.style && LACED_STYLES.includes(product.style)
+  const styleKey   = product?.style || product?.category
+  const isLaced    = styleKey && LACED_STYLES.includes(styleKey)
   const initialsStr = initials.join('').trim()
   const totalPrice  = (product?.price || 0) + sole.priceAdj + (initialsStr.length > 0 ? 75 : 0)
 

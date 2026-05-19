@@ -37,8 +37,8 @@ export default function WishlistPage() {
                 <WishlistButton product={product} className="absolute top-3 right-3 z-10 text-mj-t1" />
                 <Link href={`/products/${product.slug || product.id}`} className="block">
                   <div className="aspect-square bg-mj-bg2 mb-4 overflow-hidden flex items-center justify-center">
-                    {product.image || product.images?.[0] ? (
-                      <img src={product.image || product.images[0]} alt={product.name}
+                    {product.image || product.image_urls?.[0] || product.images?.[0] ? (
+                      <img src={product.image || product.image_urls?.[0] || product.images[0]} alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     ) : (
                       <span className="eyebrow" style={{ color: '#C8C6C0' }}>MJ</span>

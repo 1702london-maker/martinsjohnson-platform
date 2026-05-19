@@ -5,7 +5,8 @@ import ProductPageClient from './ProductPageClient'
 import { CATEGORY_IMAGES } from '@/lib/utils'
 
 export async function generateMetadata({ params }) {
-  const product = await getProduct(params.slug)
+  const { slug } = await params
+  const product = await getProduct(slug)
   return {
     title:       product ? `${product.name} — Martins Johnson` : 'Product — Martins Johnson',
     description: product?.description || 'Luxury bespoke leather goods.',
@@ -21,16 +22,17 @@ async function getProduct(slug) {
 }
 
 export default async function ProductPage({ params }) {
-  let product = await getProduct(params.slug)
+  const { slug } = await params
+  let product = await getProduct(slug)
 
   // If not in Supabase, build a placeholder from the slug so the page still renders
   if (!product) {
-    const key = params.slug.split('-')[0]
+    const key = slug.split('-')[0]
     if (!CATEGORY_IMAGES[key]) notFound()
     product = {
       id: `placeholder-${key}`,
       name: key.charAt(0).toUpperCase() + key.slice(1),
-      slug: params.slug,
+      slug,
       category: key,
       style: key,
       price: 0,

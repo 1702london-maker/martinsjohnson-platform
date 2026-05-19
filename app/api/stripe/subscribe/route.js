@@ -5,6 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
   const { priceId, customerEmail, tier } = await request.json()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_URL || request.nextUrl.origin
 
   if (!priceId || !customerEmail) {
     return NextResponse.json({ error:'Missing required fields' }, { status:400 })
@@ -21,9 +22,9 @@ export async function POST(request) {
     customer: customer.id,
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity:1 }],
-    success_url: `${process.env.NEXT_PUBLIC_URL}/join-the-club/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url:  `${process.env.NEXT_PUBLIC_URL}/join-the-club`,
-    subscription_data: { metadata: { tier, source:'mj_club' } },
+    success_url: `${siteUrl}/account?club=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url:  `${siteUrl}/join-the-club`,
+    subscription_data: { metadata: { tier, customerEmail, source:'mj_club' } },
   })
 
   return NextResponse.json({ url: session.url, sessionId: session.id })
