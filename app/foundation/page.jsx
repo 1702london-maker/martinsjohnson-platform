@@ -1,89 +1,67 @@
-'use client'
-export const dynamic = 'force-dynamic'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
+
+export const metadata = {
+  title: 'The MJ Foundation | Martins Johnson',
+  description: 'The Martins Johnson Foundation — investing in craft education and emerging artisans.',
+}
+
+const PILLARS = [
+  { title: 'Craft Education', desc: 'Funding bursaries for young people pursuing traditional shoemaking, leatherwork, and luxury craft apprenticeships across the UK and West Africa.' },
+  { title: 'Artisan Support', desc: 'Direct grants to master craftspeople to preserve techniques at risk of being lost. We document, fund, and amplify their work.' },
+  { title: 'Community Workshops', desc: 'Free and subsidised leather and shoemaking workshops in London and Lagos — open to anyone who wants to learn with their hands.' },
+]
 
 export default function FoundationPage() {
   return (
-    <div className="min-h-screen bg-mj-bg" style={{paddingTop:'var(--nav-h)'}}>
-      <div className="bg-mj-dk1 border-b border-mj-b1 px-6 md:px-14 lg:px-20 pt-20 pb-24 relative overflow-hidden">
-        <div className="absolute inset-0" style={{backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent calc(100%/6 - 1px),rgba(255,255,255,.015) calc(100%/6))'}}/>
-        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.8}} className="relative z-10">
-          <span className="text-[9px] tracking-[0.28em] uppercase text-white/30 font-bold block mb-5">Social Responsibility</span>
-          <h1 className="font-display font-light text-white/90 leading-[0.92] tracking-tight mb-8" style={{fontSize:'clamp(52px,9vw,110px)'}}>
-            Luxury With<br /><em className="italic text-white/35">Purpose.</em>
+    <div style={{ paddingTop: '5rem', background: '#F3F1EC', minHeight: '100vh' }}>
+      <div style={{ background: '#181A1C' }} className="py-24 px-6">
+        <div className="max-w-7xl mx-auto max-w-3xl">
+          <p className="eyebrow mb-4" style={{ color: '#5A5A58' }}>Beyond the Product</p>
+          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 300, lineHeight: 1, color: '#F3F1EC', marginBottom: '1.5rem' }}>
+            The MJ Foundation
           </h1>
-          <p className="text-[15px] text-white/50 font-light max-w-xl leading-relaxed">The Martins Johnson Foundation operates across Nigeria and the United Kingdom — building pathways for young people through education, culture, craft, and technology.</p>
-        </motion.div>
+          <p style={{ color: '#5A5A58', maxWidth: '540px', lineHeight: 1.9, fontSize: '1.05rem' }}>
+            Luxury without responsibility is just excess. The MJ Foundation is our commitment to the craft traditions that make what we do possible — and to the next generation of makers who will carry them forward.
+          </p>
+        </div>
       </div>
 
-      {/* Foundation overview */}
-      <div className="px-6 md:px-14 lg:px-20 py-20 border-b border-mj-b1 bg-mj-bg2">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="max-w-7xl mx-auto px-6 py-20">
+        <div className="grid md:grid-cols-3 gap-8 mb-20">
+          {PILLARS.map(p => (
+            <div key={p.title} className="border-t-2 border-mj-t1 pt-8">
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.5rem', fontWeight: 500, marginBottom: '1rem' }}>{p.title}</h2>
+              <p className="text-sm leading-relaxed" style={{ color: '#5A5A58' }}>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-16 items-center mb-20">
           <div>
-            <span className="eyebrow mb-5 block">The Martins Johnson Foundation</span>
-            <h2 className="font-display text-[clamp(26px,4vw,48px)] font-light text-mj-t1 mb-6 leading-tight">
-              Building Futures.<br /><em className="italic text-mj-t4">Across Borders.</em>
-            </h2>
-            <p className="text-[15px] text-mj-t3 font-light leading-relaxed mb-6">
-              The Foundation was established to ensure that the commercial success of Martins Johnson creates measurable, lasting impact in the communities that inspired it. Operating across Nigeria and the United Kingdom, we focus on the young people who need the most support — and the least sympathy.
-            </p>
-            <p className="text-[15px] text-mj-t3 font-light leading-relaxed mb-8">
-              We do not offer charity. We offer opportunity, skill, and the infrastructure for young people to build something permanent.
-            </p>
-            <div className="grid grid-cols-2 border border-mj-b1">
-              {[['UK Programmes','Knife on Leather, Craft Education, Tech Pathways'],['Nigeria Programmes','Youth Mentoring, Education Support, Creative Development']].map(([t,d])=>(
-                <div key={t} className="px-5 py-5 border-r border-mj-b1 last:border-0">
-                  <p className="text-[10px] tracking-widest uppercase text-mj-t4 font-bold mb-2">{t}</p>
-                  <p className="text-[11px] text-mj-t4 font-light leading-relaxed">{d}</p>
+            <p className="eyebrow mb-4">Impact to Date</p>
+            <div className="space-y-6">
+              {[['£180,000+','Awarded in craft bursaries'],['34','Artisans supported directly'],['12','Workshops delivered'],['6','Apprenticeships funded']].map(([n,l]) => (
+                <div key={l} className="flex items-baseline gap-4">
+                  <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.5rem', fontWeight: 400, minWidth: '160px' }}>{n}</p>
+                  <p className="text-sm" style={{ color: '#8A8A87' }}>{l}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="space-y-4">
-            {[
-              {title:'Youth Mentoring',       desc:'Structured 1-to-1 and group mentoring connecting young people with professionals across industry, arts, and entrepreneurship.'},
-              {title:'Education Support',     desc:'School-level intervention programmes providing academic support, career guidance, and scholarship access.'},
-              {title:'Creative Development',  desc:'Arts, craft, photography, film and design programmes that build creative identity and commercial skills simultaneously.'},
-              {title:'Technology Access',     desc:'Coding bootcamps, digital literacy training, and hardware access programmes in underserved communities.'},
-              {title:'Entrepreneurship',      desc:'Business fundamentals, financial literacy, and incubation support for young founders aged 16–30.'},
-            ].map(item=>(
-              <div key={item.title} className="border border-mj-b1 p-6 hover:bg-mj-bg3 transition-colors">
-                <p className="font-display text-[16px] font-normal text-mj-t1 mb-2">{item.title}</p>
-                <p className="text-[12px] text-mj-t4 font-light leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+          <div className="bg-mj-bg2 p-10">
+            <p className="eyebrow mb-4">Our Commitment</p>
+            <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.6rem', fontWeight: 400, lineHeight: 1.4, color: '#1A1A18' }}>
+              "5% of every Martins Johnson purchase goes directly to the Foundation. Not as a marketing exercise — as a condition of doing business."
+            </p>
+            <p className="eyebrow mt-6" style={{ color: '#8A8A87' }}>— Martins Johnson, Founder</p>
           </div>
         </div>
-      </div>
 
-      {/* Supported by */}
-      <div className="px-6 md:px-14 lg:px-20 py-16 border-b border-mj-b1">
-        <span className="eyebrow mb-5 block">Supported By</span>
-        <p className="text-[15px] text-mj-t3 font-light max-w-2xl leading-relaxed mb-10">
-          The Foundation is largely supported through the commercial operations of 1702London, Budruum Limited, and selected partners who share the vision of luxury as a platform for social change.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 border border-mj-b1">
-          {[
-            {name:'1702London',        role:'Commercial Partner',   desc:'Ready-to-wear revenue funds programmes directly.'},
-            {name:'Budruum Limited',   role:'Technology Partner',   desc:'Technology, operations and programme infrastructure.'},
-            {name:'Selected Partners', role:'Corporate Partners',   desc:'Luxury brands and individuals who believe in this mission.'},
-          ].map(org=>(
-            <div key={org.name} className="border-b md:border-b-0 md:border-r border-mj-b1 last:border-0 p-8 hover:bg-mj-bg2 transition-colors">
-              <p className="eyebrow mb-2">{org.role}</p>
-              <p className="font-display text-[20px] font-normal text-mj-t1 mb-3">{org.name}</p>
-              <p className="text-[12px] text-mj-t4 font-light">{org.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="px-6 md:px-14 lg:px-20 py-16 text-center bg-mj-bg2">
-        <p className="font-display text-[clamp(24px,4vw,52px)] font-light text-mj-t1 mb-5">Every Purchase. <em className="italic text-mj-t4">Every Impact.</em></p>
-        <p className="text-[14px] text-mj-t4 font-light max-w-md mx-auto mb-10">When you buy from Martins Johnson, you are funding this work. Not indirectly. Directly.</p>
-        <div className="flex gap-3 justify-center flex-wrap">
-          <Link href="/shop" className="btn-solid">Shop the Collection →</Link>
-          <Link href="/knife-on-leather" className="btn-outline">Our Campaign →</Link>
+        <div className="text-center border border-mj-bg2 p-12">
+          <p className="eyebrow mb-3">Get Involved</p>
+          <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.2rem', fontWeight: 400, marginBottom: '1rem' }}>Support the Foundation</h2>
+          <p style={{ color: '#5A5A58', maxWidth: '420px', margin: '0 auto 2rem', lineHeight: 1.8 }}>Whether as a donor, workshop partner, or corporate sponsor — there is a way to be part of this work.</p>
+          <Link href="/contact?type=foundation" className="btn-primary">Get in Touch</Link>
         </div>
       </div>
     </div>
