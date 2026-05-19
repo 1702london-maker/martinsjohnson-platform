@@ -1,12 +1,21 @@
 'use client'
 import { useCartStore, useGlobalStore } from '@/lib/store'
+
+const T = {
+  en: { title:'Your Bag', empty:'Your bag is empty', continue:'Continue Shopping', subtotal:'Subtotal', note:'Shipping and duty calculated at checkout', checkout:'Checkout', redirecting:'Redirecting to Checkout…' },
+  fr: { title:'Votre Panier', empty:'Votre panier est vide', continue:'Continuer les Achats', subtotal:'Sous-total', note:'Livraison et taxes calculées à la caisse', checkout:'Commander', redirecting:'Redirection…' },
+  de: { title:'Ihr Warenkorb', empty:'Ihr Warenkorb ist leer', continue:'Weiter Einkaufen', subtotal:'Zwischensumme', note:'Versand an der Kasse berechnet', checkout:'Zur Kasse', redirecting:'Weiterleitung…' },
+  es: { title:'Tu Bolsa', empty:'Tu bolsa está vacía', continue:'Seguir Comprando', subtotal:'Subtotal', note:'Envío calculado en el pago', checkout:'Pagar', redirecting:'Redirigiendo…' },
+  ar: { title:'حقيبتك', empty:'حقيبتك فارغة', continue:'مواصلة التسوق', subtotal:'المجموع الفرعي', note:'يتم احتساب الشحن عند الدفع', checkout:'الدفع', redirecting:'جارٍ التحويل…' },
+}
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useState } from 'react'
 
 export default function CartDrawer() {
   const { items, open, setOpen, removeItem, updateQty, clearCart } = useCartStore()
-  const { formatPrice } = useGlobalStore()
+  const { formatPrice, language } = useGlobalStore()
+  const t = T[language?.code] || T.en
   const [loading, setLoading] = useState(false)
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0)

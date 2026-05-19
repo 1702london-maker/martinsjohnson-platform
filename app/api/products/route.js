@@ -33,3 +33,31 @@ export async function GET(request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ products: data, total: count })
 }
+
+export async function POST(req) {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
+
+    const body = await req.json()
+    const slug = body.slug || body.name.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+
+    const { data, error } = await supabase.from('products').insert({
+      name:        body.name,
+      slug,
+      price:       Number(body.price),
+      category:    body.category,
+      gender_tag:  body.gender_tag || 'men',
+      description: body.description || null,
+      images:      body.images || [],
+      tag:         body.tag || null,
+      active:      body.active ?? true,
+    }).select().single()
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ product: data })
+  } catch (err) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+  }
+}
