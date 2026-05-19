@@ -4,7 +4,7 @@ import WishlistButton from '@/components/ui/WishlistButton'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata = {
-  title: 'Men's Collection | Martins Johnson',
+    title: "Men's Collection | Martins Johnson",
   description: 'Handcrafted footwear and leather goods for the modern gentleman. Each piece built to outlast trends.',
 }
 
