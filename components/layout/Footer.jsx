@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import NewsletterSignup from '@/components/ui/NewsletterSignup'
 
 export default function Footer() {
   return (
@@ -100,10 +101,7 @@ export default function Footer() {
           <div>
             <p className="text-[14px] font-display font-bold text-[#D8D8D4] mb-1">Stay Connected</p>
             <p className="text-[11px] text-[#6A7280] mb-4 leading-relaxed">New arrivals, private drops and atelier stories.</p>
-            <div className="flex border-b border-[#3A4048] focus-within:border-[#8D9399] transition-colors mb-3">
-              <input type="email" placeholder="Your email" className="flex-1 bg-transparent text-[#D8D8D4] text-[12px] py-2.5 outline-none placeholder-[#3A4048] font-light"/>
-              <button className="text-[11px] text-[#7A8088] hover:text-[#D8D8D4] py-2.5 pl-3 tracking-wider font-bold transition-colors">→</button>
-            </div>
+            <NewsletterSignup source="footer" variant="dark" compact />
             <p className="text-[9px] text-[#3A4048] font-medium">No spam · Unsubscribe anytime</p>
           </div>
         </div>

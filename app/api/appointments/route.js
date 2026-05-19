@@ -13,7 +13,7 @@ export async function POST(req) {
     // Save to Supabase
     let saved = false
     try {
-      const supabase = createClient()
+      const supabase = await createClient()
       const { error } = await supabase.from('appointments').insert({
         customer_name: name,
         customer_email: email,

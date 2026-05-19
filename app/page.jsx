@@ -9,7 +9,7 @@ import KnifeOnLeather   from '@/components/home/KnifeOnLeather'
 
 async function getProducts() {
   try {
-    const sb = createClient()
+    const sb = await createClient()
     const { data } = await sb.from('products').select('id,name,slug,price,category,image_urls,is_new_arrival').eq('available',true).limit(40)
     return data || []
   } catch { return [] }

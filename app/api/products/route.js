@@ -16,7 +16,7 @@ export async function GET(request) {
   const offset   = parseInt(searchParams.get('offset') || '0')
   const slug     = searchParams.get('slug')
 
-  const sb = createClient()
+  const sb = await createClient()
   let query = sb
     .from('products')
     .select('id,name,slug,price,currency,category,gender,image_urls,is_new_arrival,is_featured,is_bespoke,available,description,tags')
@@ -37,7 +37,7 @@ export async function GET(request) {
 
 export async function POST(req) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 })
 

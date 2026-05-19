@@ -6,7 +6,7 @@ export const config = { api: { bodyParser: false } }
 
 export async function POST(req) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Verify auth
     const { data: { user } } = await supabase.auth.getUser()

@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
 
 async function getProduct(slug) {
   try {
-    const sb = createClient()
+    const sb = await createClient()
     const { data } = await sb.from('products').select('*').eq('slug',slug).eq('available',true).single()
     return data
   } catch { return null }

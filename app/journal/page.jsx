@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import NewsletterSignup from '@/components/ui/NewsletterSignup'
 
 export const metadata = {
   title: 'Journal | Martins Johnson',
@@ -105,11 +106,7 @@ export default function JournalPage() {
           <p style={{ color: '#5A5A58', maxWidth: '400px', margin: '0 auto 2rem', lineHeight: 1.8 }}>
             New essays and craft notes sent monthly. No noise, no promotions — just considered writing.
           </p>
-          <form className="flex gap-3 max-w-md mx-auto">
-            <input type="email" placeholder="Your email address"
-              className="flex-1 px-4 py-3 border border-mj-bg2 bg-transparent focus:outline-none focus:border-mj-t1 transition-colors text-sm" />
-            <button type="submit" className="btn-primary px-6 py-3 whitespace-nowrap">Subscribe</button>
-          </form>
+          <NewsletterSignup source="journal" />
         </div>
       </div>
     </div>

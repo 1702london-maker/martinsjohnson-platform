@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient }  from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(req) {
   try {
@@ -8,14 +9,24 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Valid email required' }, { status: 400 })
     }
 
-    // Save subscriber
+    let saved = false
+
     try {
-      const supabase = await createClient()
-      await supabase.from('newsletter_subscribers').upsert(
+      const supabase = createAdminClient()
+      const { error } = await supabase.from('newsletter_subscribers').upsert(
         { email, source: source || 'website', subscribed_at: new Date().toISOString() },
         { onConflict: 'email' }
       )
-    } catch (_) {}
+      if (!error) saved = true
+    } catch (_) {
+      try {
+        const supabase = await createClient()
+        const { error } = await supabase.from('newsletter_subscribers').insert(
+          { email, source: source || 'website', subscribed_at: new Date().toISOString() }
+        )
+        if (!error || error.code === '23505') saved = true
+      } catch (_) {}
+    }
 
     // Welcome email via Resend
     if (process.env.RESEND_API_KEY) {
@@ -43,7 +54,7 @@ export async function POST(req) {
       } catch (_) {}
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, saved })
   } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }

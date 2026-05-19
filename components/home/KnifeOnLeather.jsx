@@ -13,12 +13,16 @@ export default function KnifeOnLeather() {
   async function subscribe(e) {
     e.preventDefault()
     if (!email) return
-    setSent(true)
-    await fetch('/api/newsletter', {
+    const res = await fetch('/api/newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, source: 'knife_on_leather' }),
     })
+    if (!res.ok) {
+      toast.error('Could not subscribe right now.')
+      return
+    }
+    setSent(true)
     toast.success('You\'re on the campaign list.')
   }
 
@@ -32,7 +36,7 @@ export default function KnifeOnLeather() {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: 'url(/images/knife-on-leather.jpg)',
+              backgroundImage: 'url(/images/categories/bespoke.jpg)',
               filter: 'brightness(0.4) contrast(1.1)',
             }}
           />
