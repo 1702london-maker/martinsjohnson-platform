@@ -68,8 +68,8 @@ export default function Navigation() {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled?'bg-mj-bg3/96 backdrop-blur-xl border-b border-mj-b1':'bg-transparent'}`} style={{height:'80px'}}>
         <div className="flex items-center h-full px-6 md:px-10 lg:px-14">
 
-          <Link href="/" className="font-display text-[15px] tracking-[0.34em] uppercase text-mj-t1 font-normal flex-shrink-0 select-none mr-10">
-            Martins Johnson
+          <Link href="/" className="flex-shrink-0 select-none mr-10" aria-label="1702 London Home">
+            <img src="/images/logo.png" alt="1702 London" style={{ height: '44px', width: 'auto', objectFit: 'contain' }} />
           </Link>
 
           <nav className="hidden xl:flex items-center gap-6">

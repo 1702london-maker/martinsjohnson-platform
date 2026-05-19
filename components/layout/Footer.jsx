@@ -55,7 +55,7 @@ export default function Footer() {
 
           {/* Logo */}
           <div className="col-span-2 md:col-span-1">
-            <p className="font-display text-[13px] tracking-[0.3em] uppercase text-[#D8D8D4] font-bold mb-3">Martins Johnson</p>
+            <img src="/images/logo.png" alt="1702 London" style={{ height: '40px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)', opacity: 0.85, marginBottom: '0.75rem' }} />
             <p className="text-[12px] text-[#6A7280] font-display italic leading-relaxed mb-6 max-w-[200px]">"Crafting legacy through luxury — one story, one stitch, one vision."</p>
             <div className="flex gap-4 flex-wrap mb-4">
               {[['IG','https://instagram.com/martinsjohnsonofficial'],['FB','https://facebook.com/martinsjonsonofficial'],['TW','https://twitter.com/1702londonbyMJ'],['WA','https://wa.me/447918046999']].map(([n,h])=>(
