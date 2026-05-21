@@ -7,9 +7,10 @@ import { CurrencySelector, LanguageSelector } from '@/components/ui/Selectors'
 
 const MJ_COLLECTION = [
   { label:'Shoes',              href:'/shop' },
-  { label:'Bags',               href:'/shop/bags' },
-  { label:'Leather Goods',      href:'/shop/leather-goods' },
-  { label:'Bracelets',          href:'/shop/bracelets' },
+  { label:'Bags',               href:'/shop?category=bag' },
+  { label:'Leather Goods',      href:'/shop?category=belt' },
+  { label:'Bracelets',          href:'/shop?category=bracelet' },
+  { label:'Exotic Leather',     href:'/shop?category=exotic' },
   { label:'Atelier Exclusives', href:'/shop?filter=exclusive' },
 ]
 
@@ -111,8 +112,8 @@ export default function Navigation() {
                           </div>
                         </div>
                         <div className="border-t border-mj-b1 px-5 py-3 flex justify-between">
-                          <Link href="/shop" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">View All â</Link>
-                          <Link href="/bespoke" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">Commission Bespoke â</Link>
+                          <Link href="/shop" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">View All →</Link>
+                          <Link href="/bespoke" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">Commission Bespoke →</Link>
                         </div>
                       </motion.div>
                     )}
