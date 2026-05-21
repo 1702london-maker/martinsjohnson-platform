@@ -23,26 +23,19 @@ const LACE_COLOURS = [
   { id: 'ivory',    label: 'Ivory',    hex: '#F0EDE8' },
   { id: 'tan',      label: 'Tan',      hex: '#6B4226' },
   { id: 'burgundy', label: 'Burgundy', hex: '#5C1A2E' },
+  { id: 'navy',     label: 'Navy',     hex: '#1B2D4A' },
   { id: 'silver',   label: 'Silver',   hex: '#C8C8C8' },
   { id: 'white',    label: 'White',    hex: '#FAFAF8' },
+  { id: 'none',     label: 'None',     hex: null },
 ]
 
 const SOLE_OPTIONS = [
-  { id: 'leather', label: 'Leather',               note: 'Classic',   priceAdj: 0  },
-  { id: 'half',    label: 'Half Leather & Rubber',  note: 'Versatile', priceAdj: 40 },
-  { id: 'rubber',  label: 'Rubber',                 note: 'Casual',    priceAdj: 40 },
+  { id: 'leather', label: 'Leather',              note: 'Classic',   priceAdj: 0  },
+  { id: 'half',    label: 'Half Leather & Rubber', note: 'Versatile', priceAdj: 40 },
+  { id: 'rubber',  label: 'Rubber',               note: 'Casual',    priceAdj: 40 },
 ]
 
 const UK_SIZES = [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12]
-
-function isLacedProduct(product) {
-  if (!product) return false
-  if (product.tags?.includes('laced')) return true
-  if (product.tags?.includes('slip-on') || product.tags?.includes('slip_on')) return false
-  if (product.metadata?.lacing === false) return false
-  if (product.metadata?.lacing === true) return true
-  return ['derby', 'sneaker'].includes(product.category)
-}
 
 export default function ProductModal({ product, onClose }) {
   const addItem = useCartStore(s => s.addItem)
@@ -55,7 +48,6 @@ export default function ProductModal({ product, onClose }) {
   const [imgIdx,   setImgIdx]   = useState(0)
   const [adding,   setAdding]   = useState(false)
 
-  const isLaced     = isLacedProduct(product)
   const initialsStr = initials.join('').trim()
   const totalPrice  = (product?.price || 0) + sole.priceAdj + (initialsStr.length > 0 ? 75 : 0)
   const images      = product?.image_urls?.length > 0 ? product.image_urls : [null]
@@ -84,11 +76,11 @@ export default function ProductModal({ product, onClose }) {
       category:   product.category,
       price:      totalPrice,
       image:      images[0],
-      variant:    colour.label + ' \u00b7 UK ' + size + ' \u00b7 ' + sole.label + (initialsStr ? ' \u00b7 "' + initialsStr + '"' : ''),
+      variant:    colour.label + ' · UK ' + size + ' · ' + sole.label + (laceCol.id !== 'none' ? ' · ' + laceCol.label + ' laces' : '') + (initialsStr ? ' · "' + initialsStr + '"' : ''),
       colour:     colour.id,
       size,
       sole:       sole.id,
-      laceColour: isLaced ? laceCol.id : null,
+      laceColour: laceCol.id,
       initials:   initialsStr,
       qty:        1,
     })
@@ -127,14 +119,19 @@ export default function ProductModal({ product, onClose }) {
                   {images[imgIdx] ? (
                     <Image key={imgIdx} src={images[imgIdx]} alt={product.name} fill className="object-cover" sizes="(max-width:768px) 100vw,340px" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-mj-t4 text-xs tracking-widest uppercase">No image</div>
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+                      <svg width="40" height="40" fill="none" stroke="#6A6A68" strokeWidth="1" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                      </svg>
+                      <span className="text-[10px] tracking-[0.2em] uppercase text-mj-t5">Image coming soon</span>
+                    </div>
                   )}
                 </div>
-                {images.length > 1 && (
+                {images.length > 1 && images[0] !== null && (
                   <div className="flex gap-2 overflow-x-auto pb-1">
                     {images.map((url, i) => (
-                      <button key={i} onClick={() => setImgIdx(i)} style={{ flexShrink: 0, width: 64, height: 64, position: 'relative', outline: i === imgIdx ? '2px solid #B9985A' : '1px solid transparent', outlineOffset: 1 }}>
-                        {url && <Image src={url} alt={'view ' + (i + 1)} fill className="object-cover" sizes="64px" />}
+                      <button key={i} onClick={() => setImgIdx(i)} style={{ flexShrink:0, width:64, height:64, position:'relative', outline: i===imgIdx ? '2px solid #B9985A' : '1px solid transparent', outlineOffset:1 }}>
+                        {url && <Image src={url} alt={'view '+(i+1)} fill className="object-cover" sizes="64px" />}
                       </button>
                     ))}
                   </div>
@@ -144,7 +141,7 @@ export default function ProductModal({ product, onClose }) {
                   <h2 className="text-xl font-display tracking-widest text-mj-t1 mb-1">{product.name}</h2>
                   <p className="text-sm text-mj-gold font-medium">
                     {'£' + totalPrice.toLocaleString('en-GB', { minimumFractionDigits: 2 })}
-                    {sole.priceAdj > 0 && <span className="text-mj-t4 text-xs ml-2">{'+£' + sole.priceAdj + ' sole'}</span>}
+                    {sole.priceAdj > 0 && <span className="text-mj-t4 text-xs ml-2">{'+£'+sole.priceAdj+' sole'}</span>}
                     {initialsStr && <span className="text-mj-t4 text-xs ml-2">+£75 initials</span>}
                   </p>
                   {product.description && (
@@ -154,6 +151,7 @@ export default function ProductModal({ product, onClose }) {
               </div>
 
               <div className="space-y-6">
+
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[10px] tracking-[0.2em] uppercase text-mj-t4 font-medium">Leather Colour</span>
@@ -161,7 +159,9 @@ export default function ProductModal({ product, onClose }) {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {COLOURS.map(c => (
-                      <button key={c.id} onClick={() => setColour(c)} title={c.label} style={{ backgroundColor: c.hex, width: 28, height: 28, borderRadius: '50%', border: colour.id === c.id ? '3px solid #B9985A' : '2px solid rgba(255,255,255,0.15)', outline: colour.id === c.id ? '2px solid #B9985A' : 'none', outlineOffset: 3, cursor: 'pointer', flexShrink: 0 }} />
+                      <button key={c.id} onClick={() => setColour(c)} title={c.label}
+                        style={{ backgroundColor:c.hex, width:28, height:28, borderRadius:'50%', border: colour.id===c.id ? '3px solid #B9985A' : '2px solid rgba(255,255,255,0.15)', outline: colour.id===c.id ? '2px solid #B9985A' : 'none', outlineOffset:3, cursor:'pointer', flexShrink:0 }}
+                      />
                     ))}
                   </div>
                 </div>
@@ -169,17 +169,30 @@ export default function ProductModal({ product, onClose }) {
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[10px] tracking-[0.2em] uppercase text-mj-t4 font-medium">Lace Colour</span>
-                    <span className="text-[11px] text-mj-t2 font-medium tracking-wide">{isLaced ? laceCol.label : 'None'}</span>
+                    <span className="text-[11px] text-mj-t2 font-medium tracking-wide">{laceCol.label}</span>
                   </div>
-                  {isLaced ? (
-                    <div className="flex flex-wrap gap-2">
-                      {LACE_COLOURS.map(c => (
-                        <button key={c.id} onClick={() => setLaceCol(c)} title={c.label} style={{ backgroundColor: c.hex, width: 28, height: 28, borderRadius: '50%', border: laceCol.id === c.id ? '3px solid #B9985A' : '2px solid rgba(255,255,255,0.15)', outline: laceCol.id === c.id ? '2px solid #B9985A' : 'none', outlineOffset: 3, cursor: 'pointer', flexShrink: 0 }} />
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[11px] text-mj-t4 tracking-wide">This style does not require laces.</p>
-                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {LACE_COLOURS.map(c => (
+                      <button key={c.id} onClick={() => setLaceCol(c)} title={c.label}
+                        style={{
+                          width:28, height:28, borderRadius:'50%', cursor:'pointer', flexShrink:0,
+                          backgroundColor: c.hex || 'transparent',
+                          border: laceCol.id===c.id ? '3px solid #B9985A' : '2px solid rgba(255,255,255,0.15)',
+                          outline: laceCol.id===c.id ? '2px solid #B9985A' : 'none',
+                          outlineOffset:3,
+                          position: 'relative',
+                          display: 'flex', alignItems:'center', justifyContent:'center',
+                        }}
+                      >
+                        {c.id === 'none' && (
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={laceCol.id==='none' ? '#B9985A' : '#6A6A68'} strokeWidth="1.5">
+                            <line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/>
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-mj-t5 mt-2">Select None if this style does not require laces.</p>
                 </div>
 
                 <div>
@@ -189,7 +202,8 @@ export default function ProductModal({ product, onClose }) {
                   </div>
                   <div className="grid grid-cols-7 gap-1">
                     {UK_SIZES.map(s => (
-                      <button key={s} onClick={() => setSize(s)} className="text-[10px] py-1.5 tracking-wide transition-colors" style={{ border: size === s ? '1px solid #B9985A' : '1px solid rgba(255,255,255,0.1)', color: size === s ? '#B9985A' : 'inherit', background: size === s ? 'rgba(185,152,90,0.08)' : 'transparent' }}>
+                      <button key={s} onClick={() => setSize(s)} className="text-[10px] py-1.5 tracking-wide transition-colors"
+                        style={{ border: size===s ? '1px solid #B9985A' : '1px solid rgba(255,255,255,0.1)', color: size===s ? '#B9985A' : 'inherit', background: size===s ? 'rgba(185,152,90,0.08)' : 'transparent' }}>
                         {s}
                       </button>
                     ))}
@@ -202,12 +216,13 @@ export default function ProductModal({ product, onClose }) {
                   </div>
                   <div className="space-y-2">
                     {SOLE_OPTIONS.map(s => (
-                      <button key={s.id} onClick={() => setSole(s)} className="w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors" style={{ border: sole.id === s.id ? '1px solid #B9985A' : '1px solid rgba(255,255,255,0.08)', background: sole.id === s.id ? 'rgba(185,152,90,0.08)' : 'transparent' }}>
+                      <button key={s.id} onClick={() => setSole(s)} className="w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors"
+                        style={{ border: sole.id===s.id ? '1px solid #B9985A' : '1px solid rgba(255,255,255,0.08)', background: sole.id===s.id ? 'rgba(185,152,90,0.08)' : 'transparent' }}>
                         <div>
                           <span className="text-[11px] tracking-wide text-mj-t1 block">{s.label}</span>
                           <span className="text-[10px] text-mj-t4">{s.note}</span>
                         </div>
-                        <span className="text-[11px] text-mj-t4">{s.priceAdj > 0 ? '+£' + s.priceAdj : 'Included'}</span>
+                        <span className="text-[11px] text-mj-t4">{s.priceAdj > 0 ? '+£'+s.priceAdj : 'Included'}</span>
                       </button>
                     ))}
                   </div>
@@ -225,12 +240,13 @@ export default function ProductModal({ product, onClose }) {
                   </div>
                 </div>
 
-                <button onClick={handleAdd} disabled={adding} className="w-full py-4 text-[11px] tracking-[0.25em] uppercase font-medium transition-all disabled:opacity-50" style={{ background: '#B9985A', color: '#121212' }}>
-                  {adding ? 'Adding\u2026' : 'Add to Bag \u2014 £' + totalPrice.toLocaleString('en-GB', { minimumFractionDigits: 2 })}
+                <button onClick={handleAdd} disabled={adding} className="w-full py-4 text-[11px] tracking-[0.25em] uppercase font-medium transition-all disabled:opacity-50"
+                  style={{ background:'#B9985A', color:'#121212' }}>
+                  {adding ? 'Adding…' : 'Add to Bag — £' + totalPrice.toLocaleString('en-GB', { minimumFractionDigits: 2 })}
                 </button>
 
                 <p className="text-[10px] text-mj-t5 text-center leading-relaxed">
-                  All shoes are handcrafted to order. Dispatch 4\u20136 weeks.
+                  All shoes are handcrafted to order. Dispatch 4–6 weeks.
                 </p>
               </div>
             </div>
