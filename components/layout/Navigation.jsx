@@ -6,7 +6,7 @@ import { useCartStore, useWishlistStore } from '@/lib/store'
 import { CurrencySelector, LanguageSelector } from '@/components/ui/Selectors'
 
 const MJ_COLLECTION = [
-  { label:'Bespoke Shoes',      href:'/bespoke/shoes' },
+  { label:'Shoes',              href:'/shop' },
   { label:'Bags',               href:'/shop/bags' },
   { label:'Leather Goods',      href:'/shop/leather-goods' },
   { label:'Bracelets',          href:'/shop/bracelets' },
@@ -69,7 +69,7 @@ export default function Navigation() {
         <div className="flex items-center h-full px-6 md:px-10 lg:px-14">
 
           <Link href="/" className="flex-shrink-0 select-none mr-10" aria-label="1702 London Home">
-            <img src="/images/logo.png" alt="1702 London" style={{ height: '44px', width: 'auto', objectFit: 'contain' }} />
+            <img src="/images/logo.png" alt="1702 London" style={{ height: '70px', width: 'auto', objectFit: 'contain' }} />
           </Link>
 
           <nav className="hidden xl:flex items-center gap-6">
@@ -111,8 +111,8 @@ export default function Navigation() {
                           </div>
                         </div>
                         <div className="border-t border-mj-b1 px-5 py-3 flex justify-between">
-                          <Link href="/shop" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">View All →</Link>
-                          <Link href="/bespoke" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">Commission Bespoke →</Link>
+                          <Link href="/shop" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">View All â</Link>
+                          <Link href="/bespoke" className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">Commission Bespoke â</Link>
                         </div>
                       </motion.div>
                     )}
