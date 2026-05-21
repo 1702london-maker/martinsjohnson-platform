@@ -24,12 +24,14 @@ export default function ShopPage() {
   const [products, setProducts]    = useState([])
   const [loading,  setLoading]     = useState(true)
   const [category, setCategory]    = useState('all')
+  const [gender,   setGender]      = useState('all')
   const [selected, setSelected]    = useState(null)
 
   useEffect(() => {
     setLoading(true)
     const params = new URLSearchParams({ limit: '40' })
     if (category !== 'all') params.set('category', category)
+    if (gender   !== 'all') params.set('gender', gender)
     fetch(`/api/products?${params}`)
       .then(r => r.json())
       .then(d => { setProducts(d.products || []); setLoading(false) })
@@ -51,13 +53,16 @@ export default function ShopPage() {
 
       {/* Filters */}
       <div className="px-6 md:px-12 lg:px-20 py-5 border-b border-mj-b1 flex gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-        
+        {/* Gender */}
+        {['all','men','women'].map(g => (
+          <button key={g} onClick={() => setGender(g)}
             className={`px-4 py-2 text-[10px] tracking-[0.14em] uppercase flex-shrink-0 font-medium border transition-all ${
               gender === g ? 'border-mj-t1 bg-mj-t1 text-mj-white' : 'border-mj-b1 text-mj-t4 hover:border-mj-b2'
             }`}>
             {g === 'all' ? 'All' : g.charAt(0).toUpperCase() + g.slice(1)}
           </button>
         ))}
+        <div className="w-px bg-mj-b1 flex-shrink-0" />
         {/* Category */}
         {CATEGORIES.map(c => (
           <button key={c.key} onClick={() => setCategory(c.key)}
