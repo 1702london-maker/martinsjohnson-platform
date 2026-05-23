@@ -1,10 +1,12 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 
-const PROTECTED = ['/account', '/account/orders', '/account/wishlist', '/account/subscriptions']
+// Routes that require auth
+const PROTECTED    = ['/account', '/affiliates/dashboard']
+// Routes only for guests
+const GUEST_ONLY   = ['/login', '/register']
 
 export async function middleware(request) {
-  // Skip if Supabase env vars not set (local dev without .env.local)
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.next()
   }
@@ -26,6 +28,7 @@ export async function middleware(request) {
   const { data: { session } } = await supabase.auth.getSession()
   const pathname = request.nextUrl.pathname
 
+  // Protected routes → redirect to login
   if (PROTECTED.some(p => pathname.startsWith(p)) && !session) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
@@ -33,7 +36,8 @@ export async function middleware(request) {
     return NextResponse.redirect(url)
   }
 
-  if ((pathname === '/login' || pathname === '/register') && session) {
+  // Guest-only routes → redirect logged-in users to account
+  if (GUEST_ONLY.some(p => pathname === p) && session) {
     const url = request.nextUrl.clone()
     url.pathname = '/account'
     return NextResponse.redirect(url)

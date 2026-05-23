@@ -1,20 +1,109 @@
 'use client'
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-
-const MOCK_STATS = { clicks:1247, conversions:38, revenue:4820, commission:579, pending:214, paid:365 }
-const MOCK_REFS = [
-  { id:'MJ-A8X2K', clicks:342, conv:12, earned:144, status:'paid' },
-  { id:'MJ-B4P9L', clicks:218, conv:8,  earned:96,  status:'paid' },
-  { id:'MJ-C7Q1M', clicks:687, conv:18, earned:216, status:'pending' },
-]
+import toast from 'react-hot-toast'
 
 export default function AffiliateDashboard() {
+  const router = useRouter()
   const [tab, setTab] = useState('overview')
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
   const TABS = ['overview','links','campaigns','assets','payouts','messages']
+
+  useEffect(() => {
+    async function load() {
+      const { createClient } = await import('@/lib/supabase/client')
+      const sb = createClient()
+      const { data: { user } } = await sb.auth.getUser()
+      if (!user) { router.push('/login?redirect=/affiliates/dashboard'); return }
+
+      const res = await fetch('/api/affiliates/dashboard')
+      if (res.ok) {
+        const d = await res.json()
+        setData(d)
+      } else {
+        const err = await res.json()
+        toast.error(err.error || 'Failed to load dashboard')
+      }
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  if (loading) return (
+    <div className="min-h-screen bg-mj-bg flex items-center justify-center" style={{paddingTop:'var(--nav-h)'}}>
+      <div className="w-6 h-6 border border-mj-b2 border-t-mj-t2 rounded-full animate-spin"/>
+    </div>
+  )
+
+  const affiliate   = data?.affiliate
+  const application = data?.application
+  const user        = data?.user
+  const clicks      = data?.clicks || []
+  const conversions = clicks.filter(c => c.converted)
+
+  // Show pending state if no affiliate record yet
+  if (!affiliate) {
+    return (
+      <div className="min-h-screen bg-mj-bg" style={{ paddingTop:'var(--nav-h)' }}>
+        <div className="bg-mj-bg2 border-b border-mj-b1 px-6 md:px-14 lg:px-20 pt-10 pb-8">
+          <span className="eyebrow mb-2 block">Affiliate Dashboard</span>
+          <h1 className="font-display text-[clamp(24px,4vw,40px)] font-light text-mj-t1">
+            Application <em className="italic text-mj-t4">Status</em>
+          </h1>
+        </div>
+        <div className="px-6 md:px-14 lg:px-20 py-16">
+          <div className="max-w-lg border border-mj-b1 p-12 text-center">
+            {application ? (
+              <>
+                <div className={`inline-block text-[9px] tracking-widest uppercase px-3 py-1.5 font-bold border mb-6 ${
+                  application.status === 'approved' ? 'text-green-600 border-green-200 bg-green-50' :
+                  application.status === 'rejected' ? 'text-red-500 border-red-200 bg-red-50' :
+                  'text-amber-600 border-amber-200 bg-amber-50'
+                }`}>{application.status}</div>
+                <p className="font-display text-[24px] font-light italic text-mj-t1 mb-3">
+                  {application.status === 'pending' ? 'Application Under Review' :
+                   application.status === 'approved' ? 'Application Approved' :
+                   'Application Not Approved'}
+                </p>
+                <p className="text-[14px] text-mj-t4 font-light mb-8">
+                  {application.status === 'pending'
+                    ? 'We review all applications within 48 hours. You\'ll receive an email once a decision has been made.'
+                    : application.status === 'approved'
+                    ? 'Your account is being set up. You\'ll receive your referral code by email shortly.'
+                    : 'Thank you for applying. Unfortunately we are not moving forward at this time. You are welcome to apply again in 3 months.'}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-[24px] font-light italic text-mj-t1 mb-3">No Application Found</p>
+                <p className="text-[14px] text-mj-t4 font-light mb-8">You haven't submitted an affiliate application yet.</p>
+              </>
+            )}
+            <Link href="/affiliates#apply" className="btn-solid">
+              {application ? 'Back to Affiliates' : 'Apply Now →'}
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Full dashboard for approved affiliates
+  const SITE = 'https://martinsjohnson.com'
+  const code = affiliate.referral_code
+
+  const LINKS = [
+    { name:'Main Shop',       url:`${SITE}/shop?ref=${code}` },
+    { name:'Bespoke Shoes',   url:`${SITE}/bespoke/shoes?ref=${code}` },
+    { name:'Join The Club',   url:`${SITE}/join-the-club?ref=${code}` },
+    { name:'1702 Collection', url:`${SITE}/1702?ref=${code}` },
+    { name:'Exotic Leather',  url:`${SITE}/shop?category=exotic&ref=${code}` },
+  ]
 
   return (
     <div className="min-h-screen bg-mj-bg" style={{ paddingTop:'var(--nav-h)' }}>
@@ -24,8 +113,11 @@ export default function AffiliateDashboard() {
           <h1 className="font-display text-[clamp(24px,4vw,40px)] font-light text-mj-t1">
             Your <em className="italic text-mj-t4">Performance</em>
           </h1>
-          <span className="text-[9px] tracking-widest uppercase border border-mj-b2 px-3 py-1.5 text-mj-t4 font-bold">Influencer Tier · 15%</span>
+          <span className="text-[9px] tracking-widest uppercase border border-mj-b2 px-3 py-1.5 text-mj-t4 font-bold capitalize">
+            {affiliate.tier} &middot; {affiliate.commission_rate}%
+          </span>
         </div>
+        <p className="text-[11px] text-mj-t5 mt-2">Code: <span className="font-mono text-mj-t3">{code}</span> &middot; {user?.email}</p>
       </div>
 
       <div className="border-b border-mj-b1 px-6 md:px-14 lg:px-20 overflow-x-auto">
@@ -43,56 +135,47 @@ export default function AffiliateDashboard() {
 
         {tab==='overview' && (
           <div>
-            {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-6 border border-mj-b1 mb-10">
               {[
-                { label:'Total Clicks',   value: MOCK_STATS.clicks.toLocaleString() },
-                { label:'Conversions',    value: MOCK_STATS.conversions },
-                { label:'Revenue',        value: `£${MOCK_STATS.revenue.toLocaleString()}` },
-                { label:'Commission',     value: `£${MOCK_STATS.commission}` },
-                { label:'Pending',        value: `£${MOCK_STATS.pending}` },
-                { label:'Total Paid',     value: `£${MOCK_STATS.paid}` },
-              ].map((s,i)=>(
+                { label:'Total Clicks',   value: affiliate.clicks?.toLocaleString() || '0' },
+                { label:'Conversions',    value: affiliate.conversions || 0 },
+                { label:'Commission',     value: `£${(affiliate.commission_balance||0).toFixed(2)}` },
+                { label:'Total Earned',   value: `£${(affiliate.total_earned||0).toFixed(2)}` },
+                { label:'Payout Status',  value: affiliate.payout_status || 'pending' },
+                { label:'Tier',           value: affiliate.tier || 'creator' },
+              ].map(s=>(
                 <div key={s.label} className="px-5 py-6 border-r border-mj-b1 last:border-0">
                   <p className="text-[9px] tracking-widest uppercase text-mj-t5 mb-1 font-bold">{s.label}</p>
-                  <p className="font-display text-[22px] font-light text-mj-t1">{s.value}</p>
+                  <p className="font-display text-[22px] font-light text-mj-t1 capitalize">{s.value}</p>
                 </div>
               ))}
             </div>
-            {/* Recent performance */}
-            <h3 className="font-display text-[20px] font-light text-mj-t1 mb-5">Referral Links</h3>
-            <div className="border border-mj-b1">
-              {MOCK_REFS.map(ref=>(
-                <div key={ref.id} className="flex items-center justify-between px-6 py-4 border-b border-mj-b1 last:border-0 hover:bg-mj-bg2 transition-colors">
-                  <div>
-                    <p className="text-[12px] font-mono text-mj-t2 font-medium">{ref.id}</p>
-                    <p className="text-[10px] text-mj-t5">{ref.clicks} clicks · {ref.conv} conversions</p>
-                  </div>
-                  <div className="flex items-center gap-5">
-                    <p className="font-display text-[16px] font-light text-mj-t1">£{ref.earned}</p>
-                    <span className={`text-[9px] tracking-widest uppercase px-2 py-1 font-bold border ${ref.status==='paid'?'text-green-600 border-green-200 bg-green-50':'text-amber-600 border-amber-200 bg-amber-50'}`}>{ref.status}</span>
-                  </div>
-                </div>
-              ))}
+
+            <div className="border border-mj-b1 p-8 bg-mj-bg2 mb-8">
+              <p className="eyebrow mb-3">Your Referral Link</p>
+              <div className="flex items-center gap-4">
+                <p className="text-[13px] font-mono text-mj-t3 flex-1 truncate">{SITE}/shop?ref={code}</p>
+                <button onClick={()=>{navigator.clipboard.writeText(`${SITE}/shop?ref=${code}`); toast.success('Copied!')}}
+                  className="text-[10px] tracking-widest uppercase border border-mj-b2 px-4 py-2 text-mj-t4 hover:text-mj-t1 hover:border-mj-t1 transition-all font-medium flex-shrink-0">
+                  Copy Link
+                </button>
+              </div>
             </div>
+
+            <p className="text-[11px] text-mj-t5">Referral clicks and conversions are tracked in real time. Commissions are calculated after the 14-day return window closes.</p>
           </div>
         )}
 
         {tab==='links' && (
           <div>
             <h2 className="font-display text-[24px] font-light text-mj-t1 mb-8">Your Referral Links</h2>
-            <div className="space-y-4 max-w-2xl">
-              {[
-                { name:'Main Shop',        url:'https://martinsjohnson.com/shop?ref=YOUR_CODE' },
-                { name:'Bespoke Shoes',    url:'https://martinsjohnson.com/bespoke/shoes?ref=YOUR_CODE' },
-                { name:'Join The Club',    url:'https://martinsjohnson.com/join-the-club?ref=YOUR_CODE' },
-                { name:'1702 Collection',  url:'https://martinsjohnson.com/1702?ref=YOUR_CODE' },
-              ].map(l=>(
+            <div className="space-y-3 max-w-2xl">
+              {LINKS.map(l=>(
                 <div key={l.name} className="border border-mj-b1 p-5 hover:border-mj-b2 transition-colors">
                   <p className="text-[11px] font-medium text-mj-t3 mb-2">{l.name}</p>
                   <div className="flex items-center gap-3">
                     <p className="text-[11px] font-mono text-mj-t4 flex-1 truncate">{l.url}</p>
-                    <button onClick={()=>{navigator.clipboard.writeText(l.url);toast?.('Copied')}}
+                    <button onClick={()=>{navigator.clipboard.writeText(l.url); toast.success('Copied!')}}
                       className="text-[9px] tracking-widest uppercase border border-mj-b1 px-3 py-1.5 text-mj-t4 hover:border-mj-b2 hover:text-mj-t2 transition-all font-medium flex-shrink-0">
                       Copy
                     </button>
@@ -116,7 +199,7 @@ export default function AffiliateDashboard() {
                 { name:'Founder Portrait Set',   size:'12MB',  type:'ZIP' },
               ].map(a=>(
                 <div key={a.name} className="border border-mj-b1 p-5 hover:border-mj-b2 hover:bg-mj-bg2 transition-all cursor-pointer group">
-                  <span className="text-[9px] tracking-widest uppercase text-mj-t5 font-bold block mb-2">{a.type} · {a.size}</span>
+                  <span className="text-[9px] tracking-widest uppercase text-mj-t5 font-bold block mb-2">{a.type} &middot; {a.size}</span>
                   <p className="text-[13px] font-medium text-mj-t2 group-hover:text-mj-t1 transition-colors mb-4">{a.name}</p>
                   <p className="text-[10px] tracking-widest uppercase text-mj-t4 hover:text-mj-t1 transition-colors font-medium">Download →</p>
                 </div>
@@ -125,10 +208,27 @@ export default function AffiliateDashboard() {
           </div>
         )}
 
-        {['campaigns','payouts','messages'].includes(tab) && (
+        {tab==='payouts' && (
+          <div>
+            <h2 className="font-display text-[24px] font-light text-mj-t1 mb-8">Payouts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mb-10">
+              <div className="border border-mj-b1 p-6">
+                <p className="eyebrow mb-1">Available Balance</p>
+                <p className="font-display text-[32px] font-light text-mj-t1">£{(affiliate.commission_balance||0).toFixed(2)}</p>
+              </div>
+              <div className="border border-mj-b1 p-6">
+                <p className="eyebrow mb-1">Total Earned</p>
+                <p className="font-display text-[32px] font-light text-mj-t1">£{(affiliate.total_earned||0).toFixed(2)}</p>
+              </div>
+            </div>
+            <p className="text-[13px] text-mj-t4 font-light">Payouts are processed on the 1st of each month via bank transfer or Stripe. Contact <a href="mailto:affiliates@martinsjohnson.com" className="text-mj-t2 hover:text-mj-t1 transition-colors">affiliates@martinsjohnson.com</a> to set up your payment details.</p>
+          </div>
+        )}
+
+        {['campaigns','messages'].includes(tab) && (
           <div className="text-center py-20 border border-mj-b1">
             <p className="font-display text-xl font-light italic text-mj-t4 mb-3 capitalize">{tab} coming soon</p>
-            <p className="text-[13px] text-mj-t5">This feature is being built. Contact your affiliate manager in the meantime.</p>
+            <p className="text-[13px] text-mj-t5">Contact your affiliate manager in the meantime.</p>
             <a href="mailto:affiliates@martinsjohnson.com" className="btn-solid mt-6">Contact Affiliate Team →</a>
           </div>
         )}
